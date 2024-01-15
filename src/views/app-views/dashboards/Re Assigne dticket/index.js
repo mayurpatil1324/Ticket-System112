@@ -20,9 +20,8 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import Flex from "components/shared-components/Flex";
-import { } from "react-router-dom";
+import {} from "react-router-dom";
 import utils from "utils";
-//import { getCourseType } from '../../../../services/MasterService';
 import masterService from "../../../../services/MasterService";
 import { useSelector } from "react-redux";
 
@@ -38,14 +37,15 @@ const AddNewCardForm = ({
   const [form] = Form.useForm();
 
   form.setFieldsValue({
-    department: initialVal.name,
+    id: initialVal.id,
+    ticket_id: initialVal.ticket_id,
     statusName: statusShow,
   });
-  //console.log(initialVal)
+
   return (
     <Modal
       destroyOnClose={true}
-      title="Add New Department"
+      title={initialVal.id > 0 ? "Edit Ticket Status" : "Add New Ticket Status"}
       open={visible}
       okText="Submit"
       onCancel={onCancel}
@@ -64,41 +64,43 @@ const AddNewCardForm = ({
       <Form
         preserve={false}
         form={form}
-        name="addDepartment"
+        name="Ticket Status"
         layout="vertical"
         initialValues={{
           id: initialVal.id,
-          department: initialVal.name,
-          statusName: statusShow,
+          ticket_id: initialVal.ticket_id,
+          is_active: statusShow,
         }}
       >
         <Form.Item
-          label="Department"
-          name="department"
+          label="Ticket Id"
+          name="ticket_id"
           rules={[
             {
               required: true,
-              message: "Please enter department!",
+              message: "Please enter Ticket Id!",
             },
           ]}
         >
           <Input
-            placeholder="Department"
-            onChange={inputChange("name", initialVal.id)}
+            placeholder="Name"
+            onChange={inputChange("ticket_id", initialVal.id)}
           />
         </Form.Item>
-        <Form.Item label="Status" name="statusName">
+        
+        <Form.Item label=" Active" name="statusName">
           <Switch onChange={statusOnChange} checked={statusShow} />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
+
 const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   return (
     <Modal
       destroyOnClose={true}
-      title="Department"
+      title="Ticket Id"
       open={visible}
       okText="OK"
       onCancel={onCancelConfirm}
@@ -111,28 +113,31 @@ const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   );
 };
 
-const DepartmentList = () => {
+const Departmentlist = () => {
   const [list, setList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
-  const [initialVal, setInitialVal] = useState({ id: "", name: "" });
+  const [initialVal, setInitialVal] = useState({ id: "", ticket_id: "",  });
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
   const [initialId, setInitialId] = useState(0);
   const [listAll, setListAll] = useState([]);
-  const [btnShowHide, setBtnShowHide] = useState({ add: 0, edit: 0, delete: 0 });
-  const auth_details = JSON.parse(useSelector(state => state.auth.auth_details))
+  const [btnShowHide, setBtnShowHide] = useState({
+    add: 0,
+    edit: 0,
+    delete: 0,
+  });
 
   const listData = () => {
     const reqeustParam = {};
     try {
-      const resp = masterService.getDepartment(reqeustParam);
+      const resp = masterService.getStatus(reqeustParam);
       resp
         .then((res) => {
           setList(res.data);
           setListAll(res.data);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     } catch (errors) {
       console.log(errors);
     }
@@ -140,14 +145,7 @@ const DepartmentList = () => {
 
   useEffect(() => {
     listData();
-    //console.log(auth_details?.role_permissions)    
-    //const addPermission = auth_details.role_permissions.filter((listPer) => listPer.id === 5)
-    //const editPermission = auth_details.role_permissions.filter((listPer) => listPer.id === 6)
-   // const delPermission = auth_details.role_permissions.filter((listPer) => listPer.id === 7)
-    //setBtnShowHide({ add: addPermission.length, edit: editPermission.length, delete: delPermission.length })
-    setBtnShowHide({ add: 1, edit: 1, delete: 1 })
-
-
+    setBtnShowHide({ add: 1, edit: 1, delete: 1 });
   }, []);
 
   const tableColumns = [
@@ -156,11 +154,11 @@ const DepartmentList = () => {
       render: (_, elm, index) => index + 1,
     },
     {
-      title: "Department",
-      dataIndex: "name",
-
-      sorter: (a, b) => utils.antdTableSorter(a, b, "name"),
+      title: "Ticket ",
+      dataIndex: "ticket_id",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "ticket_id"),
     },
+    
     {
       title: "Status",
       dataIndex: "is_active",
@@ -171,15 +169,13 @@ const DepartmentList = () => {
       ),
       sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
     },
-
     {
       title: "Action",
       dataIndex: "actions",
       render: (_, elm) => (
         <Flex>
-          {btnShowHide.edit > 0 &&
+          {btnShowHide.edit > 0 && (
             <Tooltip title="Edit">
-
               <Button
                 type="primary"
                 className="mr-2"
@@ -189,28 +185,26 @@ const DepartmentList = () => {
                 }}
                 size="small"
               />
-
             </Tooltip>
-          }
-          {btnShowHide.delete > 0 &&
-            <Tooltip title="Delete">
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={() => {
-                  deleteDepartment(elm.id);
-                }}
-                size="small"
-              />
-            </Tooltip>
-          }
+          )}
+          {/* {btnShowHide.delete > 0 && (
+            // <Tooltip title="Delete">
+            //   <Button
+            //     danger
+            //     icon={<DeleteOutlined />}
+            //     onClick={() => {
+            //       deleteStatus(elm.id);
+            //     }}
+            //     size="small"
+            //   />
+            // </Tooltip>
+          )} */}
         </Flex>
       ),
     },
   ];
 
   const onSearch = (e) => {
-    //console.log(e.currentTarget.value);
     const value = e.currentTarget.value;
     const searchArray = e.currentTarget.value ? listAll : listAll;
     const data = utils.wildCardSearch(searchArray, value);
@@ -222,74 +216,74 @@ const DepartmentList = () => {
   };
 
   const closeModal = () => {
-    setInitialVal({ id: "", name: "" });
+    setInitialVal({ id: "", name: "",});
     setModalVisible(false);
     setStatusShow(false);
   };
 
   const statusOnChange = (show) => {
-    //console.log(show)
-
     setStatusShow(show);
   };
 
   const addEditDepartment = (values) => {
-    //console.log(values)
     let departmentstatus = values.statusName === true ? 1 : 0;
 
-    //console.log(initialVal);
     if (initialVal.id > 0) {
       const reqeustParam = {
-        department_id: initialVal.id,
-        name: values.department,
+        ticket_id: initialVal.id,
+        name: values.name,
+     
         is_active: departmentstatus,
       };
-      const resp = masterService.editDepartment(reqeustParam);
+      const resp = masterService.editStatus(reqeustParam);
       resp
         .then((res) => {
           if (res.status === 200) {
             listData();
           }
           notification.success({
-            message: "Department updated successfully.",
+            message: "Status updated successfully.",
           });
-          setInitialVal({ id: "", name: "" });
+          setInitialVal({ id: "", ticket_id: "", });
           setStatusShow(false);
           setModalVisible(false);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     } else {
-      const reqeustParam = { name: values.department, is_active: departmentstatus };
-      const resp = masterService.addDepartment(reqeustParam);
+      const reqeustParam = {
+        name: values.name,
+        
+        is_active: departmentstatus,
+      };
+      const resp = masterService.addStatus(reqeustParam);
       resp
         .then((res) => {
           if (res.status === 200) {
             setList([...list, res.data]);
           }
 
-          notification.success({ message: "Department added successfully." });
-          setInitialVal({ id: "", name: "" });
+          notification.success({ message: "Status added successfully." });
+          setInitialVal({ id: "", ticket_id: "", });
           setStatusShow(false);
           setModalVisible(false);
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
-
   };
-  const showEditVaue = (elm) => {
-    //console.log(elm)
 
+  const showEditVaue = (elm) => {
     let statustype = elm.is_active === 1 ? true : false;
-    setInitialVal({ id: elm.id, name: elm.name });
+    setInitialVal({ id: elm.id, ticket_id: elm.ticket_id,  });
     setStatusShow(statustype);
 
     showModal();
   };
-  const deleteDepartment = (elm) => {
-    //console.log(elm)
+
+  const deleteStatus = (elm) => {
     setInitialId(elm);
     setModalVisibleConfirmation(true);
   };
+
   const onCancelConfirm = () => {
     setInitialId(0);
     setModalVisibleConfirmation(false);
@@ -297,23 +291,21 @@ const DepartmentList = () => {
 
   const onOKConfirm = () => {
     const reqeustParam = { department_id: initialId };
-    //console.log(initialId)
-    const resp = masterService.deleteDepartment(reqeustParam);
+    const resp = masterService.deleteStatus(reqeustParam);
     resp
       .then((res) => {
         if (res.status === 200) {
           setModalVisibleConfirmation(false);
           listData();
           notification.success({
-            message: "Department deleted successfully.",
+            message: "Status Delete successfully.",
           });
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
   };
+
   const inputChange = (name, id) => (e) => {
-    //console.log(name);
-    //console.log(e.target.value)
     setInitialVal({
       id: id,
       [name]: e.target.value,
@@ -321,26 +313,27 @@ const DepartmentList = () => {
   };
 
   var i = 1;
+
   return (
     <Card>
       <Row gutter={16} className="justify-content-between my-4">
-        <Col className="text-end mb-2" xs={24} sm={24} md={18}>
-          {btnShowHide.add > 0 &&
-            <Button
-              onClick={showModal}
-              type="primary"
-              icon={<PlusCircleOutlined />}
-            >
-              Add Department
-            </Button>
-          }
-        </Col>
         <Col className="text-end mb-2" xs={24} sm={24} md={6}>
           <Input
             placeholder="Search"
             prefix={<SearchOutlined />}
             onChange={(e) => onSearch(e)}
           />
+        </Col>
+        <Col className="text-end mb-2" xs={24} sm={24} md={6}>
+          {btnShowHide.add > 0 && (
+            <Button
+              onClick={showModal}
+              type="primary"
+              icon={<PlusCircleOutlined />}
+            >
+              Add 
+            </Button>
+          )}
         </Col>
       </Row>
       <AddNewCardForm
@@ -365,4 +358,4 @@ const DepartmentList = () => {
   );
 };
 
-export default DepartmentList;
+export default Departmentlist;
