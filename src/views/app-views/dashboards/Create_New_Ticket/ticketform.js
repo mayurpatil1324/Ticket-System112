@@ -161,25 +161,29 @@ const EmployeeDetailForm = (props) => {
     form
       .validateFields()
       .then((values) => {
-        console.log(statusShow);
+        //console.log(statusShow);
         setTimeout(() => {
           let statusActive;
           statusShow == true ? (statusActive = 1) : (statusActive = 0);
 
-          //console.log(statusActive)
+          //console.log(values)
           const data = new FormData();
           data.append("assigned_to", values.assigned_to);
           data.append("department_id", values.department_id);
           data.append("category_id", values.category_id);
+          data.append("priority_id", values.priority_id);
           data.append("subject", values.subject);
           data.append("description", values.description);
 
           if (mode === ADD) {
-            const resp = userService.addTicket(data);
+            const resp = masterService.addTicket(data);
+            console.log(resp)
             resp
               .then((res) => {
+                console.log(res)
                 if (res.status === 200) {
                   form.resetFields();
+                 
                   notification.success({
                     message: "Ticket successfully added.",
                     
@@ -190,6 +194,7 @@ const EmployeeDetailForm = (props) => {
               .catch((err) => {});
             setSubmitLoading(false);
           }
+          
           // if (mode === EDIT) {
           //   data.append("ticket_id", ticket_id);
           //   const resp = userService.editUser(data);
@@ -220,9 +225,9 @@ const EmployeeDetailForm = (props) => {
     let value = e.target ? e.target.value : e;
     setInitialVal({ ...initialVal, [name]: value });
   };
-  //   const addView = () => {
-  //     navigate(`/dashboards/create_ticket`);
-  // };
+    const addView = () => {
+      navigate(`/dashboards/create_ticket`);
+  };
 
   return (
     <>
@@ -383,11 +388,11 @@ const EmployeeDetailForm = (props) => {
             </Col>
           </Row>
           <Form.Item
-            name="user"
+            name="assigned_to"
             label="Assigned To "
             rules={[
               {
-                required: true,
+                required: false,
                 message: "Please enter Assigned To !",
               },
             ]}
@@ -404,15 +409,17 @@ const EmployeeDetailForm = (props) => {
             >
               {listuser &&
                 listuser.map((listUsersType) => (
+                  
                   <Option key={listUsersType.id} value={listUsersType.id}>
                     {listUsersType.name}
+                  
                   </Option>
                 ))}
             </Select>
           </Form.Item>
           <Form.Item
-            name="Subject"
-            label="subject"
+            name="subject"
+            label="Subject"
             rules={[
               {
                 required: true,
@@ -423,12 +430,13 @@ const EmployeeDetailForm = (props) => {
             <Input />
           </Form.Item>
 
-          <Form.Item label="Request Details" style={{ height: "200px" }}>
-            <ReactQuill
+          <Form.Item name="description" label="Request Details" style={{ height: "200px" }}>
+            <ReactQuill 
               value={formData.requestDetails}
               onChange={handleEditorChange}
               className="custom-editor"
               style={{ height: "130px" }}
+              formats={['<p> tag remove']}
             />
           </Form.Item>
           <Form.Item label="Attach File">
@@ -459,10 +467,9 @@ const EmployeeDetailForm = (props) => {
                 type="primary"
                 htmlType="submit"
                 loading={submitLoading}
-                // onClick={() => {
-                //   addView();
-                // }}
-              >
+                onClick={() => {
+                  addView();
+                }} 
                 {mode === "ADD" ? "Ticket Submit" : `Save`}
               </Button> */}
             </Col>

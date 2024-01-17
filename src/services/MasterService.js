@@ -220,4 +220,13 @@ masterService.deleteStatus = function (data) {
     data: data,
   });
 };
+
+
+masterService.getReassign = function (data) {
+  return fetch({
+    url: "list/reassign",
+    method: "post",
+    data: data,
+  });
+};
 export default masterService;

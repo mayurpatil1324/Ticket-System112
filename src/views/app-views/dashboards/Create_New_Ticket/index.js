@@ -1,4 +1,4 @@
-import React, { useState, useEffect, elm } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -6,24 +6,16 @@ import {
   Table,
   Input,
   Button,
-  Tooltip,
   Tag,
   Modal,
   Form,
   Switch,
   notification,
 } from "antd";
-import {
-  DeleteOutlined,
-  SearchOutlined,
-  PlusCircleOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import Flex from "components/shared-components/Flex";
-import {} from "react-router-dom";
 import utils from "utils";
 import masterService from "../../../../services/MasterService";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const AddNewCardForm = ({
@@ -37,22 +29,23 @@ const AddNewCardForm = ({
 }) => {
   const [form] = Form.useForm();
 
-  form.setFieldsValue({
-    id: initialVal.id,
-    ticket_number: initialVal.ticket_number,
-
-    subject: initialVal.subject,
-    department_id: initialVal.department_id,
-    category_id: initialVal.category_id,
-    description: initialVal.description,
-    Status: initialVal.code,
-  });
+  useEffect(() => {
+    form.setFieldsValue({
+      id: initialVal.id,
+      ticket_number: initialVal.ticket_number,
+      subject: initialVal.subject,
+      department_id: initialVal.department_id,
+      category_id: initialVal.category_id,
+      description: initialVal.description,
+      Status: initialVal.code,
+    });
+  }, [form, initialVal]);
 
   return (
     <Modal
       destroyOnClose={true}
       title={initialVal.id > 0 ? "Add Ticket" : "Add New Ticket"}
-      open={visible}
+      visible={visible}
       okText="Submit"
       onCancel={onCancel}
       onOk={() => {
@@ -67,101 +60,94 @@ const AddNewCardForm = ({
           });
       }}
     >
-      {/* <Form */}
-      preserve={false}
-      form={form}
-      name="addTicket" layout="vertical" initialValues=
-      {{
-        id: initialVal.id,
-        ticket_number: initialVal.ticket_number,
-
-        subject: initialVal.subject,
-        department_id: initialVal.department_id,
-        category_id: initialVal.category_id,
-        assigned_to: initialVal.assigned_to,
-
-        Status: initialVal.code,
-      }}
-      <Form.Item
-        label="Subject"
-        name="subject"
-        rules={[
-          {
-            required: true,
-            message: "Please enter Subject!",
-          },
-        ]}
+      <Form
+        form={form}
+        name="addTicket"
+        layout="vertical"
+        initialValues={{
+          id: initialVal.id,
+          ticket_number: initialVal.ticket_number,
+          subject: initialVal.subject,
+          department_id: initialVal.department_id,
+          category_id: initialVal.category_id,
+          assigned_to: initialVal.user_id,
+          assigned_to: initialVal.user_id,
+          description:initialVal.description,
+          user_id: initialVal.user_id,
+          Status: initialVal.code,
+        }}
       >
-        <Input
-          placeholder="Name"
-          onChange={inputChange("subject", initialVal.id)}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Department"
-        name="department"
-        rules={[
-          {
-            required: true,
-            message: "Please enter Department!",
-          },
-        ]}
-      >
-        <Input
-          placeholder="Department"
-          onChange={inputChange("department", initialVal.id)}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Category"
-        name="category"
-        rules={[
-          {
-            required: true,
-            message: "Please enter Category!",
-          },
-        ]}
-      >
-        <Input
-          placeholder="Category"
-          onChange={inputChange("category", initialVal.id)}
-        />
-      </Form.Item>
-      <Form.Item
-        label="Description"
-        name="description"
-        rules={[
-          {
-            required: true,
-            message: "Please enter Description!",
-          },
-        ]}
-      >
-        <Input
-          placeholder="Description"
-          onChange={inputChange("description", initialVal.id)}
-        />
-      </Form.Item>
-      <Form.Item label=" Active" name="statusName">
-        <Switch onChange={statusOnChange} checked={statusShow} />
-      </Form.Item>
-      {/* </Form> */}
+        <Form.Item
+          label="Subject"
+          name="subject"
+          rules={[
+            {
+              required: true,
+              message: "Please enter subject!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Name"
+            onChange={inputChange("subject", initialVal.id)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Department"
+          name="department"
+          rules={[
+            {
+              required: true,
+              message: "Please enter Department!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Department"
+            onChange={inputChange("department", initialVal.id)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Category"
+          name="category"
+          rules={[
+            {
+              required: true,
+              message: "Please enter Category!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Category"
+            onChange={inputChange("category", initialVal.id)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[
+            {
+              required: true,
+              message: "Please enter Description!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="Description"
+            onChange={inputChange("description", initialVal.id)}
+          />
+        </Form.Item>
+        <Form.Item label=" Active" name="statusName">
+          <Switch onChange={statusOnChange} checked={statusShow} />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
 
 const ConfirmationBox = ({ id, visible }) => {
   return (
-    <Modal
-      destroyOnClose={true}
-      title="Ticket"
-      open={visible}
-      okText="OK"
-      //   onCancel={onCancelConfirm}
-      onOk={() => {
-        // onOKConfirm();
-      }}
-    >
+    <Modal destroyOnClose={true} title="Ticket" visible={visible} okText="OK">
       Are you sure want to delete this item?
     </Modal>
   );
@@ -172,7 +158,16 @@ const Ticketlist = () => {
   const [list, setList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
-  const [initialVal, setInitialVal] = useState({ id: "", name: "", code: "" });
+  const [initialVal, setInitialVal] = useState({
+    id: "",
+    ticket_number: "",
+    subject: "",
+    department_id: "",
+    category_id: "",
+    description: "",
+    code: "", // Assuming 'code' is a property of initialVal
+    user_id: "", // Assuming 'user_id' is a property of initialVal
+  });
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
   const [initialId, setInitialId] = useState(0);
@@ -243,39 +238,6 @@ const Ticketlist = () => {
       ),
       sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
     },
-    // {
-    //   title: "Action",
-    //   dataIndex: "actions",
-    //   render: (_, elm) => (
-    //     <Flex>
-    //       {/* {btnShowHide.edit > 0 && (
-    //         <Tooltip title="Edit">
-    //           <Button
-    //             type="primary"
-    //             className="mr-2"
-    //             icon={<EditOutlined />}
-    //             onClick={() => {
-    //               showEditVaue(elm);
-    //             }}
-    //             size="small"
-    //           />
-    //         </Tooltip>
-    //       )} */}
-    //       {/* {btnShowHide.delete > 0 && (
-    //         // <Tooltip title="Delete">
-    //         //   <Button
-    //         //     danger
-    //         //     icon={<DeleteOutlined />}
-    //         //     onClick={() => {
-    //         //       deleteTicket(elm.id);
-    //         //     }}
-    //         //     size="small"
-    //         //   />
-    //         // </Tooltip>
-    //       )} */}
-    //     </Flex>
-    //   ),
-    // },
   ];
 
   const addView = () => {
@@ -296,10 +258,13 @@ const Ticketlist = () => {
   const closeModal = () => {
     setInitialVal({
       id: "",
+      ticket_number: "",
       subject: "",
       department_id: "",
       category_id: "",
       description: "",
+      code: "", // Assuming 'code' is a property of initialVal
+      user_id: "", // Assuming 'user_id' is a property of initialVal
     });
     setModalVisible(false);
     setStatusShow(false);
@@ -336,6 +301,8 @@ const Ticketlist = () => {
             department_id: "",
             category_id: "",
             description: "",
+            code: "", // Assuming 'code' is a property of initialVal
+            user_id: "", // Assuming 'user_id' is a property of initialVal
           });
           setStatusShow(false);
           setModalVisible(false);
@@ -344,14 +311,15 @@ const Ticketlist = () => {
     } else {
       const reqeustParam = {
         ticket_number: values.ticket_number,
-        assigned_to: values.assigned_to,
-        department_id: values.department_id,
-        category_id: values.category_id,
-        priority_id: values.priority_id,
-        subject: values.subject,
-        description: values.description,
+        assigned_to: values.user_id ?? 0,
+        department_id: values.department_id ?? 0,
+        category_id: values.category_id ?? 0,
+        priority_id: values.priority_id ?? 0,
+        subject: values.subject || "",
+        description: values.description || "",
         is_active: ticketstatus,
       };
+
       const resp = masterService.getTicket(reqeustParam);
       resp
         .then((res) => {
@@ -364,12 +332,14 @@ const Ticketlist = () => {
             id: "",
             ticket_number: "",
             assigned_to: "",
+            user_id: "",
             department_id: "",
             category_id: "",
-            priority_id:"",
-            subject:"",
-            description:""
-
+            priority_id: "",
+            subject: "",
+            description: "",
+            code: "", // Assuming 'code' is a property of initialVal
+            user_id: "", // Assuming 'user_id' is a property of initialVal
           });
           setStatusShow(false);
           setModalVisible(false);
@@ -378,48 +348,12 @@ const Ticketlist = () => {
     }
   };
 
-  // const showEditVaue = (elm) => {
-  //   let statustype = elm.is_active === 1 ? true : false;
-  //   setInitialVal({ id: elm.id, name: elm.name, code: elm.code });
-  //   setStatusShow(statustype);
-
-  //   showModal();
-  // };
-
-  // const deleteCountry = (elm) => {
-  //   setInitialId(elm);
-  //   setModalVisibleConfirmation(true);
-  // };
-
-  // const onCancelConfirm = () => {
-  //   setInitialId(0);
-  //   setModalVisibleConfirmation(false);
-  // };
-
-  // const onOKConfirm = () => {
-  //   const reqeustParam = { country_id: initialId };
-  //   const resp = masterService.deleteCountry(reqeustParam);
-  //   resp
-  //     .then((res) => {
-  //       if (res.status === 200) {
-  //         setModalVisibleConfirmation(false);
-  //         listData();
-  //         notification.success({
-  //           message: "Country deleted successfully.",
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {});
-  // };
-
   const inputChange = (name, id) => (e) => {
     setInitialVal({
       id: id,
       [name]: e.target.value,
     });
   };
-
-  var i = 1;
 
   return (
     <Card>
@@ -454,14 +388,9 @@ const Ticketlist = () => {
         initialVal={initialVal}
         inputChange={inputChange}
       />
-      <ConfirmationBox
-        id={initialId}
-        visible={modalVisibleConfirmation}
-        // onOKConfirm={onOKConfirm}
-        // onCancelConfirm={onCancelConfirm}
-      />
+      <ConfirmationBox id={initialId} visible={modalVisibleConfirmation} />
       <div className="table-responsive">
-        <Table key={i++} columns={tableColumns} dataSource={list} rowKey="id" />
+        <Table columns={tableColumns} dataSource={list} rowKey="id" />
       </div>
     </Card>
   );

@@ -39,81 +39,84 @@ const AddNewCardForm = ({
   form.setFieldsValue({
     id: initialVal.id,
     ticket_id: initialVal.ticket_id,
-    statusName: statusShow,
+    user_id: initialVal.user_id,
+
+
+    // statusName: statusShow,
   });
 
-  return (
-    <Modal
-      destroyOnClose={true}
-      title={initialVal.id > 0 ? "Edit Ticket Status" : "Add New Ticket Status"}
-      open={visible}
-      okText="Submit"
-      onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            form.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log("Validate Failed:", info);
-          });
-      }}
-    >
-      <Form
-        preserve={false}
-        form={form}
-        name="Ticket Status"
-        layout="vertical"
-        initialValues={{
-          id: initialVal.id,
-          ticket_id: initialVal.ticket_id,
-          is_active: statusShow,
-        }}
-      >
-        <Form.Item
-          label="Ticket Id"
-          name="ticket_id"
-          rules={[
-            {
-              required: true,
-              message: "Please enter Ticket Id!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Name"
-            onChange={inputChange("ticket_id", initialVal.id)}
-          />
-        </Form.Item>
+  // return (
+  //   // <Modal
+  //   //   destroyOnClose={true}
+  //   //   title={initialVal.id > 0 ? "Edit Ticket Status" : "Add New Ticket Status"}
+  //   //   open={visible}
+  //   //   okText="Submit"
+  //   //   onCancel={onCancel}
+  //   //   onOk={() => {
+  //   //     form
+  //   //       .validateFields()
+  //   //       .then((values) => {
+  //   //         form.resetFields();
+  //   //         onCreate(values);
+  //   //       })
+  //   //       .catch((info) => {
+  //   //         console.log("Validate Failed:", info);
+  //   //       });
+  //   //   }}
+  //   // >
+  //   //   <Form
+  //   //     preserve={false}
+  //   //     form={form}
+  //   //     name="Ticket Status"
+  //   //     layout="vertical"
+  //   //     initialValues={{
+  //   //       id: initialVal.id,
+  //   //       ticket_id: initialVal.ticket_id,
+  //   //       is_active: statusShow,
+  //   //     }}
+  //   //   >
+  //   //     <Form.Item
+  //   //       label="Ticket Id"
+  //   //       name="ticket_id"
+  //   //       rules={[
+  //   //         {
+  //   //           required: true,
+  //   //           message: "Please enter Ticket Id!",
+  //   //         },
+  //   //       ]}
+  //   //     >
+  //   //       <Input
+  //   //         placeholder="Name"
+  //   //         onChange={inputChange("ticket_id", initialVal.id)}
+  //   //       />
+  //   //     </Form.Item>
         
-        <Form.Item label=" Active" name="statusName">
-          <Switch onChange={statusOnChange} checked={statusShow} />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
+  //   //     <Form.Item label=" Active" name="statusName">
+  //   //       <Switch onChange={statusOnChange} checked={statusShow} />
+  //   //     </Form.Item>
+  //   //   </Form>
+  //   // </Modal>
+  // );
 };
 
-const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
-  return (
-    <Modal
-      destroyOnClose={true}
-      title="Ticket Id"
-      open={visible}
-      okText="OK"
-      onCancel={onCancelConfirm}
-      onOk={() => {
-        onOKConfirm();
-      }}
-    >
-      Are you sure want to delete this item?
-    </Modal>
-  );
-};
+// const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
+//   return (
+//     <Modal
+//       destroyOnClose={true}
+//       title="Ticket Id"
+//       open={visible}
+//       okText="OK"
+//       onCancel={onCancelConfirm}
+//       onOk={() => {
+//         onOKConfirm();
+//       }}
+//     >
+//       Are you sure want to delete this item?
+//     </Modal>
+//   );
+// };
 
-const Departmentlist = () => {
+const Statuslist = () => {
   const [list, setList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
@@ -131,7 +134,7 @@ const Departmentlist = () => {
   const listData = () => {
     const reqeustParam = {};
     try {
-      const resp = masterService.getStatus(reqeustParam);
+      const resp = masterService.getReassign(reqeustParam);
       resp
         .then((res) => {
           setList(res.data);
@@ -158,17 +161,23 @@ const Departmentlist = () => {
       dataIndex: "ticket_id",
       sorter: (a, b) => utils.antdTableSorter(a, b, "ticket_id"),
     },
-    
     {
-      title: "Status",
-      dataIndex: "is_active",
-      render: (status) => (
-        <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
-          {status === 1 ? "Active" : "Inactive"}
-        </Tag>
-      ),
-      sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
+      title: "User ",
+      dataIndex: "user_id",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "user_id"),
     },
+    
+    
+    // {       
+    //   title: "Status",
+    //   dataIndex: "is_active",
+    //   render: (status) => (
+    //     <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
+    //       {status === 1 ? "Active" : "Inactive"}
+    //     </Tag>
+    //   ),
+    //   sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
+    // },
     {
       title: "Action",
       dataIndex: "actions",
@@ -345,12 +354,12 @@ const Departmentlist = () => {
         initialVal={initialVal}
         inputChange={inputChange}
       />
-      <ConfirmationBox
+      {/* <ConfirmationBox
         id={initialId}
         visible={modalVisibleConfirmation}
         onOKConfirm={onOKConfirm}
         onCancelConfirm={onCancelConfirm}
-      />
+      /> */}
       <div className="table-responsive">
         <Table key={i++} columns={tableColumns} dataSource={list} rowKey="id" />
       </div>
@@ -358,4 +367,4 @@ const Departmentlist = () => {
   );
 };
 
-export default Departmentlist;
+export default Statuslist;

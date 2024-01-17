@@ -39,61 +39,62 @@ const AddNewCardForm = ({
   form.setFieldsValue({
     id: initialVal.id,
     ticket_id: initialVal.ticket_id,
+    status: initialVal.status,
     statusName: statusShow,
   });
 
-  return (
-    <Modal
-      destroyOnClose={true}
-      title={initialVal.id > 0 ? "Edit Ticket Status" : "Add New Ticket Status"}
-      open={visible}
-      okText="Submit"
-      onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            form.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log("Validate Failed:", info);
-          });
-      }}
-    >
-      <Form
-        preserve={false}
-        form={form}
-        name="Ticket Status"
-        layout="vertical"
-        initialValues={{
-          id: initialVal.id,
-          ticket_id: initialVal.ticket_id,
-          is_active: statusShow,
-        }}
-      >
-        <Form.Item
-          label="Ticket Id"
-          name="ticket_id"
-          rules={[
-            {
-              required: true,
-              message: "Please enter Ticket Id!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="Name"
-            onChange={inputChange("ticket_id", initialVal.id)}
-          />
-        </Form.Item>
+  // return (
+  //   // <Modal
+  //   //   destroyOnClose={true}
+  //   //   title={initialVal.id > 0 ? "Edit Ticket Status" : "Add New Ticket Status"}
+  //   //   open={visible}
+  //   //   okText="Submit"
+  //   //   onCancel={onCancel}
+  //   //   onOk={() => {
+  //   //     form
+  //   //       .validateFields()
+  //   //       .then((values) => {
+  //   //         form.resetFields();
+  //   //         onCreate(values);
+  //   //       })
+  //   //       .catch((info) => {
+  //   //         console.log("Validate Failed:", info);
+  //   //       });
+  //   //   }}
+  //   // >
+  //   //   <Form
+  //   //     preserve={false}
+  //   //     form={form}
+  //   //     name="Ticket Status"
+  //   //     layout="vertical"
+  //   //     initialValues={{
+  //   //       id: initialVal.id,
+  //   //       ticket_id: initialVal.ticket_id,
+  //   //       is_active: statusShow,
+  //   //     }}
+  //   //   >
+  //   //     <Form.Item
+  //   //       label="Ticket Id"
+  //   //       name="ticket_id"
+  //   //       rules={[
+  //   //         {
+  //   //           required: true,
+  //   //           message: "Please enter Ticket Id!",
+  //   //         },
+  //   //       ]}
+  //   //     >
+  //   //       <Input
+  //   //         placeholder="Name"
+  //   //         onChange={inputChange("ticket_id", initialVal.id)}
+  //   //       />
+  //   //     </Form.Item>
         
-        <Form.Item label=" Active" name="statusName">
-          <Switch onChange={statusOnChange} checked={statusShow} />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
+  //   //     <Form.Item label=" Active" name="statusName">
+  //   //       <Switch onChange={statusOnChange} checked={statusShow} />
+  //   //     </Form.Item>
+  //   //   </Form>
+  //   // </Modal>
+  // );
 };
 
 const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
@@ -158,50 +159,56 @@ const Statuslist = () => {
       dataIndex: "ticket_id",
       sorter: (a, b) => utils.antdTableSorter(a, b, "ticket_id"),
     },
+    {
+      title: "Status ",
+      dataIndex: "status",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "status"),
+    },
     
-    {
-      title: "Status",
-      dataIndex: "is_active",
-      render: (status) => (
-        <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
-          {status === 1 ? "Active" : "Inactive"}
-        </Tag>
-      ),
-      sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
-    },
-    {
-      title: "Action",
-      dataIndex: "actions",
-      render: (_, elm) => (
-        <Flex>
-          {btnShowHide.edit > 0 && (
-            <Tooltip title="Edit">
-              <Button
-                type="primary"
-                className="mr-2"
-                icon={<EditOutlined />}
-                onClick={() => {
-                  showEditVaue(elm);
-                }}
-                size="small"
-              />
-            </Tooltip>
-          )}
-          {/* {btnShowHide.delete > 0 && (
-            // <Tooltip title="Delete">
-            //   <Button
-            //     danger
-            //     icon={<DeleteOutlined />}
-            //     onClick={() => {
-            //       deleteStatus(elm.id);
-            //     }}
-            //     size="small"
-            //   />
-            // </Tooltip>
-          )} */}
-        </Flex>
-      ),
-    },
+    
+    // {       
+    //   title: "Status",
+    //   dataIndex: "is_active",
+    //   render: (status) => (
+    //     <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
+    //       {status === 1 ? "Active" : "Inactive"}
+    //     </Tag>
+    //   ),
+    //   sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
+    // },
+    // {
+    //   title: "Action",
+    //   dataIndex: "actions",
+    //   render: (_, elm) => (
+    //     <Flex>
+    //       {btnShowHide.edit > 0 && (
+    //         <Tooltip title="Edit">
+    //           <Button
+    //             type="primary"
+    //             className="mr-2"
+    //             icon={<EditOutlined />}
+    //             onClick={() => {
+    //               showEditVaue(elm);
+    //             }}
+    //             size="small"
+    //           />
+    //         </Tooltip>
+    //       )}
+    //       {/* {btnShowHide.delete > 0 && (
+    //         // <Tooltip title="Delete">
+    //         //   <Button
+    //         //     danger
+    //         //     icon={<DeleteOutlined />}
+    //         //     onClick={() => {
+    //         //       deleteStatus(elm.id);
+    //         //     }}
+    //         //     size="small"
+    //         //   />
+    //         // </Tooltip>
+    //       )} */}
+    //     </Flex>
+    //   ),
+    // },
   ];
 
   const onSearch = (e) => {
