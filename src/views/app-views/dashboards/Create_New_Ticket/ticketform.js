@@ -436,16 +436,16 @@ const EmployeeDetailForm = (props) => {
               onChange={handleEditorChange}
               className="custom-editor"
               style={{ height: "130px" }}
-              formats={['<p> tag remove']}
+            
             />
           </Form.Item>
-          <Form.Item label="Attach File">
-            {/* <Upload {...uploadProps}> */}
+          {/* <Form.Item label="Attach File"> */}
+           
             <Button icon={<UploadOutlined />} className="custom-upload-button">
               Upload File
             </Button>
-            {/* </Upload> */}
-          </Form.Item>
+           
+          {/* </Form.Item> */}
 
           {/* <Col xs={24} sm={24} md={12}>
               <Form.Item label="Status" name="is_active">

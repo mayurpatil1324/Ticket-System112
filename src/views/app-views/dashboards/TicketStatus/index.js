@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import {
   Row,
   Col,
@@ -24,6 +25,17 @@ import {} from "react-router-dom";
 import utils from "utils";
 import masterService from "../../../../services/MasterService";
 import { useSelector } from "react-redux";
+
+
+
+const statusColorMap = {
+  open: 'green',
+  'in-progress': 'orange',
+  close: 'red',
+  "re-open": 'gray',
+};
+
+
 
 const AddNewCardForm = ({
   visible,
@@ -144,6 +156,13 @@ const Statuslist = () => {
     }
   };
 
+
+
+
+
+
+
+  
   useEffect(() => {
     listData();
     setBtnShowHide({ add: 1, edit: 1, delete: 1 });
@@ -154,14 +173,21 @@ const Statuslist = () => {
       title: "Sr. No.",
       render: (_, elm, index) => index + 1,
     },
+    
     {
-      title: "Ticket ",
-      dataIndex: "ticket_id",
-      sorter: (a, b) => utils.antdTableSorter(a, b, "ticket_id"),
+      title: "Ticket No.",
+      dataIndex:["ticket","ticket_number"],
+      sorter: (a, b) => utils.antdTableSorter(a, b,["ticket","ticket_number"]),
     },
+    
     {
-      title: "Status ",
-      dataIndex: "status",
+      title: "Ticket Status ",
+      dataIndex: "status_name",
+      render: (status) => (
+        <Tag className="text-capitalize" color={statusColorMap[status.toLowerCase()] || 'red'}>
+          {status}
+        </Tag>
+      ),
       sorter: (a, b) => utils.antdTableSorter(a, b, "status"),
     },
     
@@ -331,7 +357,7 @@ const Statuslist = () => {
             onChange={(e) => onSearch(e)}
           />
         </Col>
-        <Col className="text-end mb-2" xs={24} sm={24} md={6}>
+        {/* <Col className="text-end mb-2" xs={24} sm={24} md={6}>
           {btnShowHide.add > 0 && (
             <Button
               onClick={showModal}
@@ -341,7 +367,7 @@ const Statuslist = () => {
               Add 
             </Button>
           )}
-        </Col>
+        </Col> */}
       </Row>
       <AddNewCardForm
         visible={modalVisible}

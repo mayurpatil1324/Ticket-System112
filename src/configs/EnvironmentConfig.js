@@ -1,13 +1,13 @@
 const dev = {
-  API_ENDPOINT_URL: 'http://192.168.0.139:8081/api'
+  API_ENDPOINT_URL: 'http://192.168.0.139:1801/api'
 };
 
 const prod = {
-  API_ENDPOINT_URL: 'http://192.168.0.139:8081/api'
+  API_ENDPOINT_URL: 'http://192.168.0.139:1801/api'
 };
 
 const test = {
-  API_ENDPOINT_URL: 'http://192.168.0.139:8081/api'
+  API_ENDPOINT_URL: 'http://192.168.0.139:1801/api'
 };
 
 const getEnv = () => {

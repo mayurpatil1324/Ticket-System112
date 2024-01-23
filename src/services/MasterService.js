@@ -30,20 +30,59 @@ const masterService = {};
 //     data: data,
 //   });
 // };
+
+
 masterService.getUser = function (data) {
   return fetch({
-    url: "/User/list",
+    url: "/user/list",
     method: "post",
     data: data,
   });
 };
 masterService.addUser = function (data) {
   return fetch({
-    url: "/User/add",
+    url: "/user/add",
     method: "post",
     data: data,
   });
 };
+masterService.editUser = function (data) {
+  return fetch({
+    url: "/user/update",
+    method: "post",
+    data: data,
+  });
+};
+masterService.deleteUser = function (data) {
+  return fetch({
+    url: "user/delete",
+    method: "post",
+    data: data,
+  });
+};
+masterService.showUser = function (data) {
+  return fetch({
+    url: "user/show",
+    method: "post",
+    data: data,
+  });
+};
+
+
+// masterService.getUser = function (data) {
+//   return fetch({
+//     url: "/User/list",
+//     method: "post",
+//     data: data,
+//   });
+// };
+// masterService.addUser = function (data) {
+//   return fetch({
+//     url: "/User/add",
+//     method: "post",
+//     data: data,
+//   });
+// };
 
 
 
@@ -215,7 +254,7 @@ masterService.editStatus = function (data) {
 };
 masterService.deleteStatus = function (data) {
   return fetch({
-    url: "status/delete",
+    url: "/status/delete",
     method: "post",
     data: data,
   });
@@ -224,7 +263,66 @@ masterService.deleteStatus = function (data) {
 
 masterService.getReassign = function (data) {
   return fetch({
-    url: "list/reassign",
+    url: "/ticket/reassign",
+    method: "post",
+    data: data,
+  });
+};
+
+
+masterService.getAssettype = function (data) {
+  return fetch({
+    url: "/asset-type/list",
+    method: "post",
+    data: data,
+  });
+};
+masterService.addAssettype = function (data) {
+  return fetch({
+    url: "/asset-type/create",
+    method: "post",
+    data: data,
+  });
+};
+masterService.editAssettype = function (data) {
+  return fetch({
+    url: "/asset-type/update",
+    method: "post",
+    data: data,
+  });
+};
+masterService.deleteAssettype = function (data) {
+  return fetch({
+    url: "/asset-type/delete",
+    method: "post",
+    data: data,
+  });
+};
+
+masterService.getUserAsset = function (data) {
+  return fetch({
+    url: "/user-asset/list",
+    method: "post",
+    data: data,
+  });
+};
+masterService.addUserAsset = function (data) {
+  return fetch({
+    url: "/user-asset/create",
+    method: "post",
+    data: data,
+  });
+};
+masterService.editUserAsset = function (data) {
+  return fetch({
+    url: "/user-asset/update",
+    method: "post",
+    data: data,
+  });
+};
+masterService.deleteUserAsset = function (data) {
+  return fetch({
+    url: "/user-asset/delete",
     method: "post",
     data: data,
   });

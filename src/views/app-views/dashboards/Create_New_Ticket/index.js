@@ -228,16 +228,16 @@ const Ticketlist = () => {
       dataIndex: "description",
       sorter: (a, b) => utils.antdTableSorter(a, b, "description"),
     },
-    {
-      title: "Status",
-      dataIndex: "is_active",
-      render: (status) => (
-        <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
-          {status === 1 ? "Active" : "Inactive"}
-        </Tag>
-      ),
-      sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "is_active",
+    //   render: (status) => (
+    //     <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
+    //       {status === 1 ? "Active" : "Inactive"}
+    //     </Tag>
+    //   ),
+    //   sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
+    // },
   ];
 
   const addView = () => {

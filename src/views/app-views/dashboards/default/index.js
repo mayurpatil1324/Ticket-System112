@@ -1,20 +1,27 @@
 import React from "react";
 
+import Ticketbystatus from "./ticketbystatus";
+import Graph from "./graph";
+import TicketCard from "./TicketCard";
+import { Col, Row } from "antd";
+
 const DefaultDashboard = () => {
   return (
     <>
-      <div
-        className="text-center"
-        style={{ fontSize: `35px`, color: `#0964DD` }}
-      >
-        <strong>Welcome to</strong>
-      </div>
-      <div
-        className="text-center"
-        style={{ fontSize: `35px`, color: `#343537` }}
-      >
-        <strong>ABSAX</strong>
-      </div>
+      <Row gutter={16}>
+        <Col xs={24} sm={24}>
+          <TicketCard />
+        </Col>
+        <Col xs={24} sm={14}>
+        <Graph />
+        </Col>
+        <Col xs={24} sm={10}>
+        <Ticketbystatus />
+        </Col>
+      </Row>
+
+     
+     
     </>
   );
 };

@@ -51,7 +51,23 @@ const dashBoardNavTree = [
             breadcrumb: false,
             submenu: [],
           },
+          {
+            key: "dashboards-assettype",
+            path: `${APP_PREFIX_PATH}/dashboards/assettype`,
+            title: "Asset Types",
+            icon: "DashboardOutlined",
+            breadcrumb: false,
+            submenu: [],
+          },
         ],
+      },
+      {
+        key: "dashboards-userasset",
+        path: `${APP_PREFIX_PATH}/dashboards/userasset`,
+        title: "User Asset",
+        icon: "DashboardOutlined",
+        breadcrumb: false,
+        submenu: [],
       },
       {
         key: "dashboards-ticket",

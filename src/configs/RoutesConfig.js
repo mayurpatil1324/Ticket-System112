@@ -60,6 +60,29 @@ export const protectedRoutes = [
       import("views/app-views/dashboards/Master/Priority")
     ),
   },
+  {
+    key: "dashboard.assettype",
+    path: `${APP_PREFIX_PATH}/dashboards/assettype`,
+    component: React.lazy(() =>
+      import("views/app-views/dashboards/Asset Type/index")
+    ),
+  },
+
+  {
+    key: "dashboard.asset",
+    path: `${APP_PREFIX_PATH}/dashboards/userasset`,
+    component: React.lazy(() =>
+      import("views/app-views/dashboards/User Asset/index")
+    ),
+  },
+
+  {
+    key: "dashboard.form",
+    path: `${APP_PREFIX_PATH}/dashboards/userasset/:user_id`,
+    component: React.lazy(() =>
+      import("views/app-views/dashboards/User Asset/form")
+    ),
+  },
 
   {
     key: "dashboard.create_ticket",
@@ -86,7 +109,7 @@ export const protectedRoutes = [
     key: "dashboard.reassigneticket",
     path: `${APP_PREFIX_PATH}/dashboards/reassigneticket`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Re Assigne dticket/index")
+      import("views/app-views/dashboards/Re Assigne ticket/index")
     ),
   },
   {
