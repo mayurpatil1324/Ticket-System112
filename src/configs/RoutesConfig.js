@@ -43,28 +43,28 @@ export const protectedRoutes = [
     key: "dashboard.department",
     path: `${APP_PREFIX_PATH}/dashboards/department`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Master/Department/index")
+      import("views/app-views/dashboards/Master/department/index")
     ),
   },
   {
     key: "dashboard.category",
     path: `${APP_PREFIX_PATH}/dashboards/category`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Master/Category/index")
+      import("views/app-views/dashboards/Master/category")
     ),
   },
   {
     key: "dashboard.priority",
     path: `${APP_PREFIX_PATH}/dashboards/priority`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Master/Priority")
+      import("views/app-views/dashboards/Master/priority")
     ),
   },
   {
     key: "dashboard.assettype",
     path: `${APP_PREFIX_PATH}/dashboards/assettype`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Asset Type/index")
+      import("views/app-views/dashboards/assettype/index")
     ),
   },
 
@@ -72,7 +72,7 @@ export const protectedRoutes = [
     key: "dashboard.asset",
     path: `${APP_PREFIX_PATH}/dashboards/userasset`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/User Asset/index")
+      import("views/app-views/dashboards/User_Asset/index")
     ),
   },
 
@@ -80,7 +80,7 @@ export const protectedRoutes = [
     key: "dashboard.form",
     path: `${APP_PREFIX_PATH}/dashboards/userasset/:user_id`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/User Asset/form")
+      import("views/app-views/dashboards/User_Asset/form")
     ),
   },
 
@@ -88,40 +88,40 @@ export const protectedRoutes = [
     key: "dashboard.create_ticket",
     path: `${APP_PREFIX_PATH}/dashboards/create_ticket`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Create_New_Ticket/index")
+      import("views/app-views/dashboards/create_new_ticket/index")
     ),
   },
   {
     key: "dashboard.createticket",
     path: `${APP_PREFIX_PATH}/dashboards/create_ticket/create/`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Create_New_Ticket/ticketform")
+      import("views/app-views/dashboards/create_new_ticket/ticketform")
     ),
   },
   {
-    key: "dashboard.ticket_status",
-    path: `${APP_PREFIX_PATH}/dashboards/ticket_status`,
+    key: "dashboard.ticketstatus",
+    path: `${APP_PREFIX_PATH}/dashboards/ticketstatus`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/TicketStatus/index")
+      import("views/app-views/dashboards/ticketstatus/index")
     ),
   },
   {
     key: "dashboard.reassigneticket",
     path: `${APP_PREFIX_PATH}/dashboards/reassigneticket`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Re Assigne ticket/index")
+      import("views/app-views/dashboards/reassigneticket/index")
     ),
   },
   {
     key: "dashboard.reopenticket",
     path: `${APP_PREFIX_PATH}/dashboards/reopenticket`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/Re open ticket/index")
+      import("views/app-views/dashboards/reopenticket/index")
     ),
   },
   {
     key: "dashboard.faq",
     path: `${APP_PREFIX_PATH}/dashboards/faq`,
-    component: React.lazy(() => import("views/app-views/dashboards/FAQ/index")),
+    component: React.lazy(() => import("views/app-views/dashboards/faq/index")),
   },
 ];

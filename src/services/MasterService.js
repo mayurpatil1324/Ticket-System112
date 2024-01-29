@@ -327,4 +327,23 @@ masterService.deleteUserAsset = function (data) {
     data: data,
   });
 };
+
+
+masterService.Reopen = function (data) {
+  return fetch({
+    url: "/ticket/reopen",
+    method: "post",
+    data: data,
+  });
+};
+
+masterService.getDashboard = function (data) {
+  return fetch({
+    url: "/dashboard/list",
+    method: "post",
+    data: data,
+  });
+};
+
+
 export default masterService;

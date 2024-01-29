@@ -13,6 +13,7 @@ import {
   Switch,
   notification,
   Select,
+  
 } from "antd";
 import {
   DeleteOutlined,
@@ -21,10 +22,17 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import Flex from "components/shared-components/Flex";
-import masterService from "../../../../services/MasterService";
+import {} from "react-router-dom";
 import utils from "utils";
+import masterService from "../../../../services/MasterService";
 import { useSelector } from "react-redux";
 import { Option } from "antd/es/mentions";
+
+const statusOptions = [
+  { id: 1, type: 'Hardware' },
+  { id: 2, type: 'Software' },
+];
+
 
 const AddNewCardForm = ({
   visible,
@@ -34,17 +42,20 @@ const AddNewCardForm = ({
   statusShow,
   initialVal,
   inputChange,
-//   listassettypeAll,
 }) => {
   const [form] = Form.useForm();
-
-  form.setFieldsValue({
-    Id: initialVal.id,
-
-    name: initialVal.name,
+  const [formData, setFormData] = useState({
     type: initialVal.type,
-    statusName: statusShow,
-  });
+});
+
+  // form.setFieldsValue({
+  //   id: initialVal.id,
+  //   name: initialVal.name,
+  //   type: initialVal.type,
+  //   key: initialVal.key,
+  //   expiry_date: initialVal.expiry_date,
+  //   statusName: statusShow,
+  // });
 
   return (
     <Modal
@@ -74,11 +85,11 @@ const AddNewCardForm = ({
           id: initialVal.id,
           name: initialVal.name,
           type: initialVal.type,
+          key: initialVal.key,
+          expiry_date: initialVal.expiry_date,
           is_active: statusShow,
         }}
       >
-        
-
         <Form.Item
           label="Name"
           name="name"
@@ -94,40 +105,62 @@ const AddNewCardForm = ({
             onChange={inputChange("name", initialVal.id)}
           />
         </Form.Item>
-        <Form.Item
-          label="Asset Type "
+        <Form.Item label="Type" name="type">
+          <Select
+            onChange={(value) => setFormData({ ...formData, status: value })}
+          >
+            {statusOptions.map((option) => (
+              <Option key={option.status} value={option.status}>
+                {option.status}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        {/* <Form.Item
+          label="Type"
           name="type"
           rules={[
             {
               required: true,
-              message: "Please select Asset type!",
+              message: "Please enter type!",
             },
           ]}
         >
-            <Input
-            placeholder="Asset Type"
+          <Input
+            placeholder="type"
             onChange={inputChange("type", initialVal.id)}
           />
-          {/* <Select
-            onChange={inputChange("name")}
-            showSearch
-            placeholder="Select Asset Type Name"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.props.children
-                .toLowerCase()
-                .indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            {listassettypeAll &&
-              listassettypeAll.map((listCType) => (
-                <Option key={listCType.id} value={listCType.id}>
-                  {listCType.name}
-                </Option>
-              ))}
-          </Select> */}
+        </Form.Item> */}
+        <Form.Item
+          label="key"
+          name="key"
+          rules={[
+            {
+              required: true,
+              message: "Please enter key!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="key"
+            onChange={inputChange("key", initialVal.id)}
+          />
         </Form.Item>
-
+        <Form.Item
+          label="Expiry Date"
+          name="expiry_date"
+          rules={[
+            {
+              required: true,
+              message: "Please enter expiry_date!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="expiry_date"
+            onChange={inputChange("expiry_date", initialVal.id)}
+          />
+        </Form.Item>
         <Form.Item label=" Active" name="statusName">
           <Switch onChange={statusOnChange} checked={statusShow} />
         </Form.Item>
@@ -153,7 +186,7 @@ const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   );
 };
 
-const AssetTypelist = () => {
+const Countrylist = () => {
   const [list, setList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
@@ -161,8 +194,9 @@ const AssetTypelist = () => {
     id: "",
     name: "",
     type: "",
+    key: "",
+    expiry_date: "",
   });
-//   const [listassettypeAll, setlistassettypeAll] = useState([]);
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
   const [initialId, setInitialId] = useState(0);
@@ -188,29 +222,8 @@ const AssetTypelist = () => {
     }
   };
 
-  const listassettypeData = () => {
-    const reqeustParam = {};
-    try {
-      const resp = masterService.dsfdsd(reqeustParam);
-      resp
-        .then((res) => {
-          console.log(res);
-
-        //   setlistassettypeAll(res.data);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    } catch (errors) {
-      console.log(errors);
-    }
-  };
-
   useEffect(() => {
     listData();
-    listassettypeData();
-
-    // Fetch data for listdepartmentAll
     setBtnShowHide({ add: 1, edit: 1, delete: 1 });
   }, []);
 
@@ -224,16 +237,22 @@ const AssetTypelist = () => {
       dataIndex: "name",
       sorter: (a, b) => utils.antdTableSorter(a, b, "name"),
     },
-
     {
-        title: "Asset Type",
-        dataIndex: "type",
-        sorter: (a, b) => utils.antdTableSorter(a, b, "type"),
-      },
-    // {
-    //   title: "Asset Type",
-    //   render: (_, elm) => <>{elm.type?.name}</>,
-    // },
+      title: "Type",
+      dataIndex: "type",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "type"),
+    },
+    {
+      title: "Key",
+      dataIndex: "key",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "key"),
+    },
+    {
+      title: "Expiry Date",
+      dataIndex: "expiry_date",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "expiry_date"),
+    },
+
     {
       title: "Status",
       dataIndex: "is_active",
@@ -268,7 +287,7 @@ const AssetTypelist = () => {
                 danger
                 icon={<DeleteOutlined />}
                 onClick={() => {
-                  deleteAssetType(elm.id);
+                  deleteAssettype(elm.id);
                 }}
                 size="small"
               />
@@ -291,7 +310,7 @@ const AssetTypelist = () => {
   };
 
   const closeModal = () => {
-    setInitialVal({ id: "", name: "", type: "" });
+    setInitialVal({ id: "", name: "", type: "", key: "", expiry_date: "" });
     setModalVisible(false);
     setStatusShow(false);
   };
@@ -300,14 +319,16 @@ const AssetTypelist = () => {
     setStatusShow(show);
   };
 
-  const addEditAssetType = (values) => {
+  const addEditAssettype = (values) => {
     let countrystatus = values.statusName === true ? 1 : 0;
 
     if (initialVal.id > 0) {
       const reqeustParam = {
-        asset_type_id: initialVal.id,
+        asset_id: initialVal.asset_id,
         name: values.name,
         type: values.type,
+        key: values.key,
+        expiry_date: values.expiry_date,
         is_active: countrystatus,
       };
       const resp = masterService.editAssettype(reqeustParam);
@@ -317,9 +338,15 @@ const AssetTypelist = () => {
             listData();
           }
           notification.success({
-            message: "Asset Type updated successfully.",
+            message: "Country updated successfully.",
           });
-          setInitialVal({ asset_type_id: "", name: "", type: "" });
+          setInitialVal({
+            id: "",
+            name: "",
+            type: "",
+            key: "",
+            expiry_date: "",
+          });
           setStatusShow(false);
           setModalVisible(false);
         })
@@ -328,6 +355,8 @@ const AssetTypelist = () => {
       const reqeustParam = {
         name: values.name,
         type: values.type,
+        key: values.key,
+        expiry_date: values.expiry_date,
         is_active: countrystatus,
       };
       const resp = masterService.addAssettype(reqeustParam);
@@ -335,11 +364,16 @@ const AssetTypelist = () => {
         .then((res) => {
           if (res.status === 200) {
             setList([...list, res.data]);
-            // listData();
           }
 
           notification.success({ message: "Asset Type added successfully." });
-          setInitialVal({ name: "", type: "" });
+          setInitialVal({
+            id: "",
+            name: "",
+            type: "",
+            key: "",
+            expiry_date: "",
+          });
           setStatusShow(false);
           setModalVisible(false);
         })
@@ -349,14 +383,20 @@ const AssetTypelist = () => {
 
   const showEditVaue = (elm) => {
     let statustype = elm.is_active === 1 ? true : false;
-    setInitialVal({ id: elm.id, name: elm.name, type: elm.type });
+    setInitialVal({
+      id: elm.id,
+      name: elm.name,
+      type: elm.type,
+      key: elm.key,
+      expiry_date: elm.expiry_date,
+    });
     setStatusShow(statustype);
 
     showModal();
   };
 
-  const deleteAssetType = (elmId) => {
-    setInitialId(elmId);
+  const deleteAssettype = (elm) => {
+    setInitialId(elm);
     setModalVisibleConfirmation(true);
   };
 
@@ -365,9 +405,8 @@ const AssetTypelist = () => {
     setModalVisibleConfirmation(false);
   };
 
-
   const onOKConfirm = () => {
-    const reqeustParam = { asset_id: initialId }; 
+    const reqeustParam = { asset_id: initialId };
     const resp = masterService.deleteAssettype(reqeustParam);
     resp
       .then((res) => {
@@ -382,18 +421,12 @@ const AssetTypelist = () => {
       .catch((err) => {});
   };
 
-  const inputChange = (name) => (e) => {
-    let value = e.target ? e.target.value : e;
-
-    // Assuming formFieldValues is the state managing form field values
-    setInitialVal({ ...initialVal, [name]: value });
+  const inputChange = (name, id) => (e) => {
+    setInitialVal({
+      id: id,
+      [name]: e.target.value,
+    });
   };
-  // const inputChange = (name, id) => (e) => {
-  //   setInitialVal({
-  //     id: id,
-  //     [name]: e.target.value,
-  //   });
-  // };
 
   var i = 1;
 
@@ -420,9 +453,8 @@ const AssetTypelist = () => {
         </Col>
       </Row>
       <AddNewCardForm
-        // listassettypeAll={listassettypeAll}
         visible={modalVisible}
-        onCreate={addEditAssetType}
+        onCreate={addEditAssettype}
         onCancel={closeModal}
         statusOnChange={statusOnChange}
         statusShow={statusShow}
@@ -442,6 +474,4 @@ const AssetTypelist = () => {
   );
 };
 
-export default AssetTypelist;
-
-
+export default Countrylist;

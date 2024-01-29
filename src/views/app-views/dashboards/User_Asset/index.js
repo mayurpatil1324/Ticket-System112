@@ -229,64 +229,29 @@ const UserList = () => {
   }, []);
 
   const tableColumns = [
-    // {
-    //   title: "Sr. No.",
-    //   render: (_, elm, index) => index + 1,
-    // },
-    // {
-    //   title: "User Name ",
-    //   dataIndex:[ 'user','name'],
-
-    //   sorter: (a, b) => utils.antdTableSorter(a, b, [ 'user','name']),
-    // },
-    // {
-    //   title: "Asset Name",
-    //   dataIndex: ['asset','name'],
-
-    //   sorter: (a, b) => utils.antdTableSorter(a, b,  ['asset','name']),
-    // },
     
-    // {
-    //   title: "Code",
-    //   dataIndex: "code",
-
-    //   sorter: (a, b) => utils.antdTableSorter(a, b, "code"),
-    // },
-    // {
-    //   title: "Assign Date",
-    //   dataIndex: "assign_date",
-
-    //   sorter: (a, b) => utils.antdTableSorter(a, b, "assign_date"),
-    // },
     {
       title: "Sr. No.",
       render: (_, elm, index) => index + 1,
     },
     {
       title: "User Name ",
-      dataIndex:"name",
+      dataIndex: "name",
 
-      sorter: (a, b) => utils.antdTableSorter(a, b,  "name",),
+      sorter: (a, b) => utils.antdTableSorter(a, b, "name"),
     },
     {
       title: "email ",
       dataIndex: "email",
 
-      sorter: (a, b) => utils.antdTableSorter(a, b,  "email"),
+      sorter: (a, b) => utils.antdTableSorter(a, b, "email"),
     },
-    
     {
       title: "mobile",
       dataIndex: "mobile",
 
       sorter: (a, b) => utils.antdTableSorter(a, b, "mobile"),
     },
-    // {
-    //   title: "role_id ",
-    //   dataIndex: "role_id",
-
-    //   sorter: (a, b) => utils.antdTableSorter(a, b, "role_id"),
-    // },
     {
       title: "Status",
       dataIndex: "is_active",
@@ -308,38 +273,6 @@ const UserList = () => {
               icon={<EyeOutlined />}
               onClick={() => {
                 viewEmployee(elm.id);
-              }}
-              size="small"
-            />
-          </Tooltip>
-          <Tooltip title="Edit">
-            <Button
-              type="primary"
-              className="mr-2"
-              icon={<EditOutlined />}
-              onClick={() => {
-                editEmployee(elm.id);
-              }}
-              size="small"
-            />
-          </Tooltip>
-          {/* <Tooltip title="Earning Statement">
-            <Button
-              type="primary"
-              className="mr-2"
-              icon={<EyeOutlined />}
-              onClick={() => {
-                EarningStatement(elm.id);
-              }}
-              size="small"
-            />
-          </Tooltip> */}
-          <Tooltip title="Delete">
-            <Button
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                deleteuser(elm.id);
               }}
               size="small"
             />
@@ -407,22 +340,17 @@ const UserList = () => {
   const addEmployee = () => {
     navigate(`/dashboards/user-add`);
   };
-  const editEmployee = (id) => {
-    navigate(`/dashboards/user-edit/${id} `);
-  };
-
-
+  // const editEmployee = (id) => {
+  //   navigate(`/dashboards/user-edit/${id} `);
+  // };
 
   const viewEmployee = (user_id) => {
     navigate(`/dashboards/userasset/${user_id}`);
   };
 
-
-
-  
-  const EarningStatement = (id) => {
-    navigate(`/dashboards/add-earning-statement/${id}`);
-  };
+  // const EarningStatement = (id) => {
+  //   navigate(`/dashboards/add-earning-statement/${id}`);
+  // };
 
   const showModal = () => {
     setModalVisible(true);
@@ -448,7 +376,7 @@ const UserList = () => {
   return (
     <Card>
       <Row gutter={16} className="justify-content-between mb-4">
-        <Col className="text-end mb-2" xs={24} sm={24} md={18}>
+        {/* <Col className="text-end mb-2" xs={24} sm={24} md={18}>
           {btnShowHide.add > 0 && (
             <Button
               onClick={addEmployee}
@@ -458,7 +386,7 @@ const UserList = () => {
               Add Employee
             </Button>
           )}
-        </Col>
+        </Col> */}
         <Col className="text-end mb-2" xs={24} sm={24} md={6}>
           <Input
             placeholder="Search"

@@ -131,7 +131,7 @@ const Statuslist = () => {
   const listData = () => {
     const reqeustParam = {};
     try {
-      const resp = masterService.getStatus(reqeustParam);
+      const resp = masterService.Reopen(reqeustParam);
       resp
         .then((res) => {
           setList(res.data);
@@ -155,8 +155,8 @@ const Statuslist = () => {
     },
     {
       title: "Ticket ",
-      dataIndex: "ticket_id",
-      sorter: (a, b) => utils.antdTableSorter(a, b, "ticket_id"),
+      dataIndex: ["ticket","ticket_number"],
+      sorter: (a, b) => utils.antdTableSorter(a, b, ["ticket","ticket_number"]),
     },
     {
       title: "Status ",
@@ -231,51 +231,51 @@ const Statuslist = () => {
     setStatusShow(show);
   };
 
-  const addEditDepartment = (values) => {
-    let departmentstatus = values.statusName === true ? 1 : 0;
+  // const addEditDepartment = (values) => {
+  //   let departmentstatus = values.statusName === true ? 1 : 0;
 
-    if (initialVal.id > 0) {
-      const reqeustParam = {
-        ticket_id: initialVal.id,
-        name: values.name,
+  //   if (initialVal.id > 0) {
+  //     const reqeustParam = {
+  //       ticket_id: initialVal.id,
+  //       name: values.name,
      
-        is_active: departmentstatus,
-      };
-      const resp = masterService.editStatus(reqeustParam);
-      resp
-        .then((res) => {
-          if (res.status === 200) {
-            listData();
-          }
-          notification.success({
-            message: "Status updated successfully.",
-          });
-          setInitialVal({ id: "", ticket_id: "", });
-          setStatusShow(false);
-          setModalVisible(false);
-        })
-        .catch((err) => {});
-    } else {
-      const reqeustParam = {
-        name: values.name,
+  //       is_active: departmentstatus,
+  //     };
+  //     const resp = masterService.editStatus(reqeustParam);
+  //     resp
+  //       .then((res) => {
+  //         if (res.status === 200) {
+  //           listData();
+  //         }
+  //         notification.success({
+  //           message: "Status updated successfully.",
+  //         });
+  //         setInitialVal({ id: "", ticket_id: "", });
+  //         setStatusShow(false);
+  //         setModalVisible(false);
+  //       })
+  //       .catch((err) => {});
+  //   } else {
+  //     const reqeustParam = {
+  //       name: values.name,
         
-        is_active: departmentstatus,
-      };
-      const resp = masterService.addStatus(reqeustParam);
-      resp
-        .then((res) => {
-          if (res.status === 200) {
-            setList([...list, res.data]);
-          }
+  //       is_active: departmentstatus,
+  //     };
+  //     const resp = masterService.addStatus(reqeustParam);
+  //     resp
+  //       .then((res) => {
+  //         if (res.status === 200) {
+  //           setList([...list, res.data]);
+  //         }
 
-          notification.success({ message: "Status added successfully." });
-          setInitialVal({ id: "", ticket_id: "", });
-          setStatusShow(false);
-          setModalVisible(false);
-        })
-        .catch((err) => {});
-    }
-  };
+  //         notification.success({ message: "Status added successfully." });
+  //         setInitialVal({ id: "", ticket_id: "", });
+  //         setStatusShow(false);
+  //         setModalVisible(false);
+  //       })
+  //       .catch((err) => {});
+  //   }
+  // };
 
   const showEditVaue = (elm) => {
     let statustype = elm.is_active === 1 ? true : false;
@@ -295,21 +295,21 @@ const Statuslist = () => {
     setModalVisibleConfirmation(false);
   };
 
-  const onOKConfirm = () => {
-    const reqeustParam = { department_id: initialId };
-    const resp = masterService.deleteStatus(reqeustParam);
-    resp
-      .then((res) => {
-        if (res.status === 200) {
-          setModalVisibleConfirmation(false);
-          listData();
-          notification.success({
-            message: "Status Delete successfully.",
-          });
-        }
-      })
-      .catch((err) => {});
-  };
+  // const onOKConfirm = () => {
+  //   const reqeustParam = { department_id: initialId };
+  //   const resp = masterService.deleteStatus(reqeustParam);
+  //   resp
+  //     .then((res) => {
+  //       if (res.status === 200) {
+  //         setModalVisibleConfirmation(false);
+  //         listData();
+  //         notification.success({
+  //           message: "Status Delete successfully.",
+  //         });
+  //       }
+  //     })
+  //     .catch((err) => {});
+  // };
 
   const inputChange = (name, id) => (e) => {
     setInitialVal({
@@ -344,7 +344,7 @@ const Statuslist = () => {
       </Row>
       <AddNewCardForm
         visible={modalVisible}
-        onCreate={addEditDepartment}
+        // onCreate={addEditDepartment}
         onCancel={closeModal}
         statusOnChange={statusOnChange}
         statusShow={statusShow}
@@ -354,7 +354,7 @@ const Statuslist = () => {
       <ConfirmationBox
         id={initialId}
         visible={modalVisibleConfirmation}
-        onOKConfirm={onOKConfirm}
+        // onOKConfirm={onOKConfirm}
         onCancelConfirm={onCancelConfirm}
       />
       <div className="table-responsive">

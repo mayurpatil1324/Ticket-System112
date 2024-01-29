@@ -3,7 +3,7 @@ import React from "react";
 import Ticketbystatus from "./ticketbystatus";
 import Graph from "./graph";
 import TicketCard from "./TicketCard";
-import { Col, Row } from "antd";
+import { Card, Col, Row } from "antd";
 
 const DefaultDashboard = () => {
   return (
@@ -12,16 +12,13 @@ const DefaultDashboard = () => {
         <Col xs={24} sm={24}>
           <TicketCard />
         </Col>
-        <Col xs={24} sm={14}>
-        <Graph />
+        <Col xs={24} sm={12} style={{ marginTop: "30px" }}>
+          <Graph />
         </Col>
-        <Col xs={24} sm={10}>
-        <Ticketbystatus />
+        <Col xs={24} sm={12} style={{ marginTop: "30px" }}>
+          <Ticketbystatus />
         </Col>
       </Row>
-
-     
-     
     </>
   );
 };

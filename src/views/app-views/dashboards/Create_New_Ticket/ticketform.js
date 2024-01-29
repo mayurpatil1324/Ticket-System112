@@ -3,7 +3,6 @@ import { Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import userService from "services/UserServoce";
 
-
 import {
   message,
   Input,
@@ -23,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { initInputToken } from "antd/es/input/style";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
+import DOMPurify from "dompurify";
 
 const { MonthPicker } = DatePicker;
 
@@ -82,7 +82,7 @@ const EmployeeDetailForm = (props) => {
   // };
 
   const listDepartmentdata = () => {
-    const reqeustParam = {};
+    const reqeustParam = { is_active: 1};
     try {
       const resp = masterService.getDepartment(reqeustParam);
       resp
@@ -98,7 +98,7 @@ const EmployeeDetailForm = (props) => {
   };
 
   const listUserdata = () => {
-    const reqeustParam = {};
+    const reqeustParam = { is_active: 1};
     try {
       const resp = masterService.getUser(reqeustParam);
       resp
@@ -114,7 +114,7 @@ const EmployeeDetailForm = (props) => {
   };
 
   const listCategorydata = () => {
-    const reqeustParam = {};
+    const reqeustParam = { is_active: 1};
     try {
       const resp = masterService.getCategory(reqeustParam);
       resp
@@ -177,16 +177,15 @@ const EmployeeDetailForm = (props) => {
 
           if (mode === ADD) {
             const resp = masterService.addTicket(data);
-            console.log(resp)
+            console.log(resp);
             resp
               .then((res) => {
-                console.log(res)
+                console.log(res);
                 if (res.status === 200) {
                   form.resetFields();
-                 
+
                   notification.success({
                     message: "Ticket successfully added.",
-                    
                   });
                   navigate("/dashboards/create_ticket");
                 }
@@ -194,7 +193,7 @@ const EmployeeDetailForm = (props) => {
               .catch((err) => {});
             setSubmitLoading(false);
           }
-          
+
           // if (mode === EDIT) {
           //   data.append("ticket_id", ticket_id);
           //   const resp = userService.editUser(data);
@@ -209,7 +208,7 @@ const EmployeeDetailForm = (props) => {
           //     .catch((err) => {});
           //   setSubmitLoading(false);
           // }
-        }, );
+        });
       })
       .catch((info) => {
         setSubmitLoading(false);
@@ -225,8 +224,8 @@ const EmployeeDetailForm = (props) => {
     let value = e.target ? e.target.value : e;
     setInitialVal({ ...initialVal, [name]: value });
   };
-    const addView = () => {
-      navigate(`/dashboards/create_ticket`);
+  const addView = () => {
+    navigate(`/dashboards/create_ticket`);
   };
 
   return (
@@ -409,10 +408,8 @@ const EmployeeDetailForm = (props) => {
             >
               {listuser &&
                 listuser.map((listUsersType) => (
-                  
                   <Option key={listUsersType.id} value={listUsersType.id}>
                     {listUsersType.name}
-                  
                   </Option>
                 ))}
             </Select>
@@ -430,29 +427,27 @@ const EmployeeDetailForm = (props) => {
             <Input />
           </Form.Item>
 
-          <Form.Item name="description" label="Request Details" style={{ height: "200px" }}>
-            <ReactQuill 
-              value={formData.requestDetails}
+          <Form.Item
+            name="description"
+            label="Request Details"
+            style={{ height: "200px" }}
+          >
+            <ReactQuill
+              value={DOMPurify.sanitize(formData.requestDetails)}
               onChange={handleEditorChange}
               className="custom-editor"
               style={{ height: "130px" }}
-            
             />
           </Form.Item>
-          {/* <Form.Item label="Attach File"> */}
-           
-            <Button icon={<UploadOutlined />} className="custom-upload-button">
-              Upload File
-            </Button>
-           
-          {/* </Form.Item> */}
+          <Form.Item label="Attach File">
 
-          {/* <Col xs={24} sm={24} md={12}>
-              <Form.Item label="Status" name="is_active">
-                <Switch onChange={statusOnChange} checked={statusShow} />
-              </Form.Item>
-            </Col> */}
+          <Button icon={<UploadOutlined />} className="custom-upload-button">
+            Upload File
+          </Button>
 
+          </Form.Item>
+
+         
           <Row justify="end">
             <Col>
               <Button

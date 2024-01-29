@@ -181,15 +181,16 @@ const Statuslist = () => {
     },
     
     {
-      title: "Ticket Status ",
+      title: "Ticket Status",
       dataIndex: "status_name",
       render: (status) => (
-        <Tag className="text-capitalize" color={statusColorMap[status.toLowerCase()] || 'red'}>
+        <Tag className="text-capitalize" color={statusColorMap[status?.toLowerCase()] || 'red'}>
           {status}
         </Tag>
       ),
       sorter: (a, b) => utils.antdTableSorter(a, b, "status"),
     },
+  
     
     
     // {       

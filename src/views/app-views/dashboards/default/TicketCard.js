@@ -1,58 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Col, Row, Typography } from 'antd';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import { Card, Row, Typography } from "antd";
+import masterService from '../../../../services/MasterService';
 const { Title, Text } = Typography;
 
-const MyComponent = () => {
-  const [ticketData, setTicketData] = useState([]);
+const TicketCards = () => {
+  const [ticketCardData, setTicketCardData] = useState([
+    // { title: 'New Ticket', value: 0 },
+    // { title: 'Open Ticket', value: 0 },
+    // { title: 'Close Ticket', value: 0 },
+    // { title: 'In Progress', value: 0 },
+    // { title: 'Resolve', value: 0 },
+    // { title: 'Pending', value: 0 },
+  ]);
 
   useEffect(() => {
-    // Simulate API call using Axios, replace with your actual API endpoint
-    axios.get('YOUR_API_ENDPOINT_HERE')
-      .then(response => {
-        setTicketData(response.data.slice(0, 6)); // Limiting to 6 items for demonstration
-      })
-      .catch(error => {
+    const fetchData = async () => {
+      try {
+        const response = await masterService.getDashboard(/* pass any necessary data */);
+        const { data } = response;
+
+        // Create ticketCardData directly from API response
+        const updatedTicketCardData = data.count_percentage.map((item) => ({
+          title: item.status,
+          value: item.count,
+        }));
+
+        setTicketCardData(updatedTicketCardData);
+      } catch (error) {
         console.error('Error fetching data:', error);
-      });
+      }
+    };
+
+    fetchData(); // Call the function to fetch data on component mount
   }, []);
 
-  const ticketCards = [
-    { title: 'New Ticket', content: ' New Ticket', value: 10 },
-    { title: 'Open Ticket', content: 'Open Ticket', value: 20 },
-    { title: 'Close Ticket', content: 'Close Ticket', value: 5 },
-    { title: 'In Progress', content: 'In Progress', value: 15 },
-    { title: 'Resolve', content: 'Resolve', value: 30 },
-    { title: 'Pending', content: 'Pending', value: 25 },
-  ];
-
   return (
-    <div style={{ padding: '30px',paddingBottom:"20px 20px 20px 20px" }}>
+    <div>
       <Row gutter={24}>
-        {ticketData.map((ticket, index) => (
-          <Col key={ticket.id || index} span={4}>
-            <Card title={ticket.title} bordered={false}>
-              <Text>{ticket.description}</Text>
-            </Card>
-          </Col>
-        ))}
-        {ticketCards.map((card, index) => (
-          <Col key={index} span={4}>
-            <Card
-              title={<Title level={4}>{card.title}</Title>}
-              bordered={false}
-              style={{ backgroundColor: '#fff', borderRadius: 8 }}
-            >
-              <Text>{card.content}</Text>
-              <br />
-              <Text strong>Value: {card.value}</Text>
-            </Card>
-          </Col>
+        {ticketCardData.map((card, index) => (
+          <Card
+            key={index}
+            bordered={false}
+            style={{
+              backgroundColor: "#ffffff",
+              borderRadius: 8,
+              textAlign: "center",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              transition: "transform 0.3s",
+              ":hover": {
+                transform: "scale(1.05)",
+              },
+              height: "110px",
+              flex: 1,
+              margin: "0 12px", // Add margin between cards
+            }}
+          >
+            <Text style={{ color: "black", textTransform: "uppercase", fontWeight: "bolder" }}>
+              {card.title === "Close Ticket" ? (
+                <strong>{card.title}</strong>
+              ) : (
+                card.title
+              )}
+            </Text>
+            <Title level={2} style={{ color: "#333", fontWeight: "bold", marginTop: "10px", fontSize: "30px" }}>
+              {card.title === "Close Ticket" ? (
+                <strong>{card.value}</strong>
+              ) : (
+                card.value
+              )}
+            </Title>
+          </Card>
         ))}
       </Row>
     </div>
   );
 };
 
-export default MyComponent;
+export default TicketCards;
