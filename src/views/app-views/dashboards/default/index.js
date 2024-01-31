@@ -3,7 +3,8 @@ import React from "react";
 import Ticketbystatus from "./ticketbystatus";
 import Graph from "./graph";
 import TicketCard from "./TicketCard";
-import { Card, Col, Row } from "antd";
+// import   Assetlist  from "./assetlist";
+import {  Col, Row } from "antd";
 
 const DefaultDashboard = () => {
   return (
@@ -18,6 +19,7 @@ const DefaultDashboard = () => {
         <Col xs={24} sm={12} style={{ marginTop: "30px" }}>
           <Ticketbystatus />
         </Col>
+        {/* <Assetlist/> */}
       </Row>
     </>
   );

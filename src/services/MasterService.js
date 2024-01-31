@@ -261,9 +261,9 @@ masterService.deleteStatus = function (data) {
 };
 
 
-masterService.getReassign = function (data) {
+masterService.getAssign = function (data) {
   return fetch({
-    url: "/ticket/reassign",
+    url: "/ticket/assign",
     method: "post",
     data: data,
   });

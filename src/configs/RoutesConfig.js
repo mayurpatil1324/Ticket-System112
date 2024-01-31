@@ -68,19 +68,20 @@ export const protectedRoutes = [
     ),
   },
 
+  
   {
-    key: "dashboard.asset",
+    key: "dashboard.userasset",
     path: `${APP_PREFIX_PATH}/dashboards/userasset`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/User_Asset/index")
+      import("views/app-views/dashboards/userasset/index")
     ),
   },
-
-  {
-    key: "dashboard.form",
-    path: `${APP_PREFIX_PATH}/dashboards/userasset/:user_id`,
+  
+   {
+    key: "dashboard.forms",
+    path: `${APP_PREFIX_PATH}/dashboards/useraaa/:user_id`,
     component: React.lazy(() =>
-      import("views/app-views/dashboards/User_Asset/form")
+      import("views/app-views/dashboards/userasset/form")
     ),
   },
 

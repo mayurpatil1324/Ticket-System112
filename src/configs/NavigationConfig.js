@@ -35,22 +35,22 @@ const dashBoardNavTree = [
             breadcrumb: false,
             submenu: [],
           },
-          // {
-          //   key: "dashboards-category",
-          //   path: `${APP_PREFIX_PATH}/dashboards/category`,
-          //   title: "Category",
-          //   icon: "DashboardOutlined",
-          //   breadcrumb: false,
-          //   submenu: [],
-          // },
-          // {
-          //   key: "dashboards-priority",
-          //   path: `${APP_PREFIX_PATH}/dashboards/priority`,
-          //   title: "Priority",
-          //   icon: "DashboardOutlined",
-          //   breadcrumb: false,
-          //   submenu: [],
-          // },
+          {
+            key: "dashboards-category",
+            path: `${APP_PREFIX_PATH}/dashboards/category`,
+            title: "Category",
+            icon: "DashboardOutlined",
+            breadcrumb: false,
+            submenu: [],
+          },
+          {
+            key: "dashboards-priority",
+            path: `${APP_PREFIX_PATH}/dashboards/priority`,
+            title: "Priority",
+            icon: "DashboardOutlined",
+            breadcrumb: false,
+            submenu: [],
+          },
           {
             key: "dashboards-assettype",
             path: `${APP_PREFIX_PATH}/dashboards/assettype`,
@@ -61,6 +61,7 @@ const dashBoardNavTree = [
           },
         ],
       },
+     
       {
         key: "dashboards-userasset",
         path: `${APP_PREFIX_PATH}/dashboards/userasset`,
@@ -69,6 +70,7 @@ const dashBoardNavTree = [
         breadcrumb: false,
         submenu: [],
       },
+
       {
         key: "dashboards-ticket",
         path: `${APP_PREFIX_PATH}/dashboards/ticket`,

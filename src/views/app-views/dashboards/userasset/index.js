@@ -12,24 +12,32 @@ import {
   Form,
   Switch,
   notification,
+  DatePicker,
 } from "antd";
 import {
   DeleteOutlined,
   SearchOutlined,
+  EyeOutlined,
   PlusCircleOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import dayjs from "dayjs";
 import Flex from "components/shared-components/Flex";
+import { useNavigate } from "react-router-dom";
 import {} from "react-router-dom";
 import utils from "utils";
-import masterService from "../../../../../services/MasterService";
+import masterService from "../../../../services/MasterService";
 import { useSelector } from "react-redux";
+const { MonthPicker } = DatePicker;
+
+const dateFormat = "YYYY-MM-DD";
 
 const AddNewCardForm = ({
   visible,
   onCreate,
   onCancel,
   statusOnChange,
+  onCancelConfirmExp,
   statusShow,
   initialVal,
   inputChange,
@@ -39,16 +47,18 @@ const AddNewCardForm = ({
   form.setFieldsValue({
     id: initialVal.id,
     name: initialVal.name,
+    email: initialVal.email,
+    mobile: initialVal.mobile,
     statusName: statusShow,
   });
 
   return (
     <Modal
       destroyOnClose={true}
-      title={initialVal.id > 0 ? "Edit Priority" : "Add New Priority"}
+      title="Add Experience"
       open={visible}
       okText="Submit"
-      onCancel={onCancel}
+      onCancel={onCancelConfirmExp}
       onOk={() => {
         form
           .validateFields()
@@ -64,31 +74,76 @@ const AddNewCardForm = ({
       <Form
         preserve={false}
         form={form}
-        name="addPriority"
+        name="addExperience"
         layout="vertical"
         initialValues={{
           id: initialVal.id,
           name: initialVal.name,
-          is_active: statusShow,
+          email: initialVal.email,
+          mobile: initialVal.mobile,
+          statusName: statusShow,
         }}
       >
         <Form.Item
-          label="Name"
-          name="name"
+          label="Company Name"
+          name="company_name"
           rules={[
             {
               required: true,
-              message: "Please enter Name!",
+              message: "Please enter company name!",
             },
           ]}
         >
           <Input
-            placeholder="Name"
-            onChange={inputChange("name", initialVal.id)}
+            placeholder="Company Name"
+            onChange={inputChange("company_name", initialVal.company_name)}
           />
         </Form.Item>
-
-        
+        <Form.Item
+          label="Position"
+          name="position"
+          rules={[
+            {
+              required: true,
+              message: "Please enter postion!",
+            },
+          ]}
+        >
+          <Input
+            placeholder="position"
+            onChange={inputChange("position", initialVal.position)}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Start Date"
+          name="start_date"
+          rules={[
+            {
+              required: true,
+              message: "Please enter start date!",
+            },
+          ]}
+        >
+          <DatePicker
+            defaultValue={dayjs("", dateFormat)}
+            format={dateFormat}
+          />
+        </Form.Item>
+        <Form.Item
+          label="End Date"
+          name="end_date"
+          rules={[
+            {
+              required: true,
+              message: "Please enter End date!",
+            },
+          ]}
+        >
+          <DatePicker
+            defaultValue={dayjs("", dateFormat)}
+            format={dateFormat}
+          />
+        </Form.Item>
       </Form>
     </Modal>
   );
@@ -98,7 +153,7 @@ const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   return (
     <Modal
       destroyOnClose={true}
-      title="Priority"
+      title="Department"
       open={visible}
       okText="OK"
       onCancel={onCancelConfirm}
@@ -111,11 +166,17 @@ const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   );
 };
 
-const Countrylist = () => {
+const Departmentlist = () => {
   const [list, setList] = useState([]);
+  const navigate = useNavigate();
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
-  const [initialVal, setInitialVal] = useState({ id: "", name: "" });
+  const [initialVal, setInitialVal] = useState({
+    id: "",
+    name: "",
+    email: "",
+    mobile: "",
+  });
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
   const [initialId, setInitialId] = useState(0);
@@ -129,7 +190,7 @@ const Countrylist = () => {
   const listData = () => {
     const reqeustParam = {};
     try {
-      const resp = masterService.getPriority(reqeustParam);
+      const resp = masterService.getUser(reqeustParam);
       resp
         .then((res) => {
           setList(res.data);
@@ -152,17 +213,48 @@ const Countrylist = () => {
       render: (_, elm, index) => index + 1,
     },
     {
-      title: "Name",
+      title: "User Name ",
       dataIndex: "name",
+
       sorter: (a, b) => utils.antdTableSorter(a, b, "name"),
     },
+    {
+      title: "email ",
+      dataIndex: "email",
 
-    
+      sorter: (a, b) => utils.antdTableSorter(a, b, "email"),
+    },
+    {
+      title: "mobile",
+      dataIndex: "mobile",
+
+      sorter: (a, b) => utils.antdTableSorter(a, b, "mobile"),
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      render: (status) => (
+        <Tag className="text-capitalize" color={status === 1 ? "cyan" : "red"}>
+          {status === 1 ? "Active" : "Inactive"}
+        </Tag>
+      ),
+      sorter: (a, b) => utils.antdTableSorter(a, b, "is_active"),
+    },
     {
       title: "Action",
       dataIndex: "actions",
       render: (_, elm) => (
         <Flex>
+          <Tooltip title="View">
+            <Button
+              className="mr-2 text-white bg-dark"
+              icon={<EyeOutlined />}
+              onClick={() => {
+                viewUser(elm.id);
+              }}
+              size="small"
+            />
+          </Tooltip>
           {btnShowHide.edit > 0 && (
             <Tooltip title="Edit">
               <Button
@@ -182,7 +274,7 @@ const Countrylist = () => {
                 danger
                 icon={<DeleteOutlined />}
                 onClick={() => {
-                  deletePriority(elm.id);
+                  deleteDepartment(elm.id);
                 }}
                 size="small"
               />
@@ -210,28 +302,32 @@ const Countrylist = () => {
     setStatusShow(false);
   };
 
+  const viewUser = (user_id) => {
+    navigate(`/dashboards/useraaa/${user_id}`);
+  };
+
   const statusOnChange = (show) => {
     setStatusShow(show);
   };
 
-  const addEditPriority = (values) => {
-    let prioritystatus = values.statusName === true ? 1 : 0;
+  const addEditDepartment = (values) => {
+    let departmentstatus = values.statusName === true ? 1 : 0;
 
     if (initialVal.id > 0) {
       const reqeustParam = {
-        Priority_id: initialVal.id,
+        department_id: initialVal.id,
         name: values.name,
 
-        is_active: prioritystatus,
+        is_active: departmentstatus,
       };
-      const resp = masterService.editPriority(reqeustParam);
+      const resp = masterService.editDepartment(reqeustParam);
       resp
         .then((res) => {
           if (res.status === 200) {
             listData();
           }
           notification.success({
-            message: "Priority updated successfully.",
+            message: "Department updated successfully.",
           });
           setInitialVal({ id: "", name: "" });
           setStatusShow(false);
@@ -242,16 +338,16 @@ const Countrylist = () => {
       const reqeustParam = {
         name: values.name,
 
-        is_active: prioritystatus,
+        is_active: departmentstatus,
       };
-      const resp = masterService.addPriority(reqeustParam);
+      const resp = masterService.addDepartment(reqeustParam);
       resp
         .then((res) => {
           if (res.status === 200) {
             setList([...list, res.data]);
           }
 
-          notification.success({ message: "Priority added successfully." });
+          notification.success({ message: "Department added successfully." });
           setInitialVal({ id: "", name: "" });
           setStatusShow(false);
           setModalVisible(false);
@@ -268,7 +364,7 @@ const Countrylist = () => {
     showModal();
   };
 
-  const deletePriority = (elm) => {
+  const deleteDepartment = (elm) => {
     setInitialId(elm);
     setModalVisibleConfirmation(true);
   };
@@ -280,14 +376,14 @@ const Countrylist = () => {
 
   const onOKConfirm = () => {
     const reqeustParam = { department_id: initialId };
-    const resp = masterService.deletePriority(reqeustParam);
+    const resp = masterService.deleteDepartment(reqeustParam);
     resp
       .then((res) => {
         if (res.status === 200) {
           setModalVisibleConfirmation(false);
           listData();
           notification.success({
-            message: "Priority Delete successfully.",
+            message: "Department Delete successfully.",
           });
         }
       })
@@ -320,14 +416,14 @@ const Countrylist = () => {
               type="primary"
               icon={<PlusCircleOutlined />}
             >
-              Add Country
+              Add Department
             </Button>
           )}
         </Col>
       </Row>
       <AddNewCardForm
         visible={modalVisible}
-        onCreate={addEditPriority}
+        onCreate={addEditDepartment}
         onCancel={closeModal}
         statusOnChange={statusOnChange}
         statusShow={statusShow}
@@ -347,4 +443,4 @@ const Countrylist = () => {
   );
 };
 
-export default Countrylist;
+export default Departmentlist;

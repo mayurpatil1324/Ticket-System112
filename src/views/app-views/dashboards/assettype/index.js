@@ -13,7 +13,7 @@ import {
   Switch,
   notification,
   Select,
-  
+  DatePicker,
 } from "antd";
 import {
   DeleteOutlined,
@@ -29,11 +29,9 @@ import { useSelector } from "react-redux";
 import { Option } from "antd/es/mentions";
 
 const statusOptions = [
-  { id: 1, type: 'Hardware' },
-  { id: 2, type: 'Software' },
+  { id: 1, type: "Hardware" },
+  { id: 2, type: "Software" },
 ];
-
-
 const AddNewCardForm = ({
   visible,
   onCreate,
@@ -46,15 +44,14 @@ const AddNewCardForm = ({
   const [form] = Form.useForm();
   const [formData, setFormData] = useState({
     type: initialVal.type,
-});
-
+  });
   // form.setFieldsValue({
   //   id: initialVal.id,
   //   name: initialVal.name,
   //   type: initialVal.type,
   //   key: initialVal.key,
   //   expiry_date: initialVal.expiry_date,
-  //   statusName: statusShow,
+  //   is_active: statusShow,
   // });
 
   return (
@@ -79,7 +76,7 @@ const AddNewCardForm = ({
       <Form
         preserve={false}
         form={form}
-        name="addAssetType"
+        name="AddAssetType"
         layout="vertical"
         initialValues={{
           id: initialVal.id,
@@ -107,60 +104,42 @@ const AddNewCardForm = ({
         </Form.Item>
         <Form.Item label="Type" name="type">
           <Select
-            onChange={(value) => setFormData({ ...formData, status: value })}
+            onChange={(value) => setFormData({ ...formData, type: value })}
           >
             {statusOptions.map((option) => (
-              <Option key={option.status} value={option.status}>
-                {option.status}
+              <Option key={option.type} value={option.type}>
+                {option.type}
               </Option>
             ))}
           </Select>
         </Form.Item>
-        {/* <Form.Item
-          label="Type"
-          name="type"
-          rules={[
-            {
-              required: true,
-              message: "Please enter type!",
-            },
-          ]}
-        >
-          <Input
-            placeholder="type"
-            onChange={inputChange("type", initialVal.id)}
-          />
-        </Form.Item> */}
         <Form.Item
-          label="key"
+          label="Key"
           name="key"
           rules={[
             {
               required: true,
-              message: "Please enter key!",
+              message: "Please enter Key!",
             },
           ]}
         >
           <Input
-            placeholder="key"
+            placeholder="Key"
             onChange={inputChange("key", initialVal.id)}
           />
         </Form.Item>
         <Form.Item
           label="Expiry Date"
           name="expiry_date"
-          rules={[
-            {
-              required: true,
-              message: "Please enter expiry_date!",
-            },
-          ]}
+         
         >
-          <Input
-            placeholder="expiry_date"
-            onChange={inputChange("expiry_date", initialVal.id)}
+          <DatePicker
+            style={{ width: "100%" }}
+            placeholder="Select Expiry Date"
+           
           />
         </Form.Item>
+
         <Form.Item label=" Active" name="statusName">
           <Switch onChange={statusOnChange} checked={statusShow} />
         </Form.Item>
@@ -186,17 +165,11 @@ const ConfirmationBox = ({ id, visible, onOKConfirm, onCancelConfirm }) => {
   );
 };
 
-const Countrylist = () => {
+const Departmentlist = () => {
   const [list, setList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [statusShow, setStatusShow] = useState(false);
-  const [initialVal, setInitialVal] = useState({
-    id: "",
-    name: "",
-    type: "",
-    key: "",
-    expiry_date: "",
-  });
+  const [initialVal, setInitialVal] = useState({ id: "", name: "" });
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
   const [initialId, setInitialId] = useState(0);
@@ -250,6 +223,7 @@ const Countrylist = () => {
     {
       title: "Expiry Date",
       dataIndex: "expiry_date",
+
       sorter: (a, b) => utils.antdTableSorter(a, b, "expiry_date"),
     },
 
@@ -320,16 +294,17 @@ const Countrylist = () => {
   };
 
   const addEditAssettype = (values) => {
-    let countrystatus = values.statusName === true ? 1 : 0;
+    let assettypetstatus = values.statusName === true ? 1 : 0;
 
     if (initialVal.id > 0) {
       const reqeustParam = {
-        asset_id: initialVal.asset_id,
+        asset_id: initialVal.id,
         name: values.name,
         type: values.type,
         key: values.key,
         expiry_date: values.expiry_date,
-        is_active: countrystatus,
+
+        is_active: assettypetstatus,
       };
       const resp = masterService.editAssettype(reqeustParam);
       resp
@@ -338,7 +313,7 @@ const Countrylist = () => {
             listData();
           }
           notification.success({
-            message: "Country updated successfully.",
+            message: "Asset Type updated successfully.",
           });
           setInitialVal({
             id: "",
@@ -357,7 +332,8 @@ const Countrylist = () => {
         type: values.type,
         key: values.key,
         expiry_date: values.expiry_date,
-        is_active: countrystatus,
+
+        is_active: assettypetstatus,
       };
       const resp = masterService.addAssettype(reqeustParam);
       resp
@@ -366,7 +342,7 @@ const Countrylist = () => {
             setList([...list, res.data]);
           }
 
-          notification.success({ message: "Asset Type added successfully." });
+          notification.success({ message: "Assettype added successfully." });
           setInitialVal({
             id: "",
             name: "",
@@ -388,7 +364,7 @@ const Countrylist = () => {
       name: elm.name,
       type: elm.type,
       key: elm.key,
-      expiry_date: elm.expiry_date,
+     // expiry_date: elm.expiry_date,
     });
     setStatusShow(statustype);
 
@@ -406,7 +382,7 @@ const Countrylist = () => {
   };
 
   const onOKConfirm = () => {
-    const reqeustParam = { asset_id: initialId };
+    const reqeustParam = { asset_type_id: initialId };
     const resp = masterService.deleteAssettype(reqeustParam);
     resp
       .then((res) => {
@@ -414,7 +390,7 @@ const Countrylist = () => {
           setModalVisibleConfirmation(false);
           listData();
           notification.success({
-            message: "Asset Type deleted successfully.",
+            message: "Assettype Delete successfully.",
           });
         }
       })
@@ -474,4 +450,4 @@ const Countrylist = () => {
   );
 };
 
-export default Countrylist;
+export default Departmentlist;

@@ -13,9 +13,13 @@ import {
   notification,
   Tooltip,
 } from "antd";
-import{EyeOutlined} from "@ant-design/icons";
-import{EditOutlined} from "@ant-design/icons";
-import {DeleteOutlined, SwapOutlined, PlusCircleOutlined, } from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  SwapOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 import { SearchOutlined } from "@ant-design/icons";
 import Flex from "components/shared-components/Flex";
 import utils from "utils";
@@ -169,8 +173,8 @@ const Ticketlist = () => {
     department_id: "",
     category_id: "",
     description: "",
-    code: "", 
-    user_id: "", 
+    code: "",
+    user_id: "",
   });
   const [modalVisibleConfirmation, setModalVisibleConfirmation] =
     useState(false);
@@ -202,7 +206,6 @@ const Ticketlist = () => {
     setBtnShowHide({ add: 1, edit: 1, delete: 1 });
   }, []);
 
-
   const addEmployee = () => {
     navigate(`/dashboards/user-add`);
   };
@@ -210,20 +213,13 @@ const Ticketlist = () => {
     navigate(`/dashboards/user-edit/${id} `);
   };
 
-
-
   const viewEmployee = (user_id) => {
     navigate(`/dashboards/userasset/${user_id}`);
   };
 
-
-
-  
   const EarningStatement = (id) => {
     navigate(`/dashboards/add-earning-statement/${id}`);
   };
-
-
 
   const tableColumns = [
     {
@@ -265,7 +261,7 @@ const Ticketlist = () => {
       dataIndex: "actions",
       render: (_, elm) => (
         <Flex>
-          <Tooltip title="View">
+          {/* <Tooltip title="View">
             <Button
               className="mr-2 text-white bg-dark"
               icon={<EyeOutlined />}
@@ -274,44 +270,28 @@ const Ticketlist = () => {
               }}
               size="small"
             />
-          </Tooltip>
-          {/* <Tooltip title="Edit">
-            <Button
-              type="primary"
-              className="mr-2"
-              icon={<EditOutlined />}
-              onClick={() => {
-                editEmployee(elm.id);
-              }}
-              size="small"
-            />
           </Tooltip> */}
+
           <Tooltip title="Reassign">
             <Button
-             className="mr-2 text-white bg-dark"
+              className="mr-2 text-white bg-dark"
               type="danger"
               icon={<SwapOutlined />}
               onClick={() => {
-               
-
+                showEditVaue(elm);
               }}
               size="small"
             />
           </Tooltip>
           <Tooltip title="Edit Status">
             <Button
-             className="mr-2 text-white bg-dark"
+              className="mr-2 text-white bg-dark"
               type="default"
-              icon={<EditOutlined />}  
-              onClick={() => {
-               
-                
-              }}
+              icon={<EditOutlined />}
+              onClick={() => {}}
               size="small"
             />
           </Tooltip>
-          
-        
         </Flex>
       ),
     },
@@ -388,7 +368,8 @@ const Ticketlist = () => {
     } else {
       const reqeustParam = {
         ticket_number: values.ticket_number,
-        assigned_to: values.user_id ?? 0,
+        user_id: values.user_id,
+        assigned_to: values.assigned_to ?? 0,
         department_id: values.department_id ?? 0,
         category_id: values.category_id ?? 0,
         priority_id: values.priority_id ?? 0,
@@ -397,32 +378,51 @@ const Ticketlist = () => {
         is_active: ticketstatus,
       };
 
-      const resp = masterService.getTicket(reqeustParam);
+      const resp = masterService.getAssign(reqeustParam);
       resp
         .then((res) => {
           if (res.status === 200) {
             setList([...list, res.data]);
           }
 
-          notification.success({ message: "Ticket added successfully." });
+          notification.success({ message: "Ticket Assign successfully." });
           setInitialVal({
             id: "",
             ticket_number: "",
-            assigned_to: "",
             user_id: "",
+            assigned_to: "",
             department_id: "",
             category_id: "",
             priority_id: "",
             subject: "",
             description: "",
-            code: "", // Assuming 'code' is a property of initialVal
-            user_id: "", // Assuming 'user_id' is a property of initialVal
+            is_active: ticketstatus,
+            // code: "", // Assuming 'code' is a property of initialVal
+            // user_id: "", // Assuming 'user_id' is a property of initialVal
           });
           setStatusShow(false);
           setModalVisible(false);
         })
         .catch((err) => {});
     }
+  };
+
+  const showEditVaue = (elm) => {
+    let statustype = elm.is_active === 1 ? true : false;
+    setInitialVal({
+      id: elm.id,
+      ticket_number: elm.ticket_number,
+      user_id: elm.user_id,
+      assigned_to: elm.assigned_to,
+      department_id: elm.department_id,
+      category_id: elm.category_id,
+      priority_id: elm.priority_id,
+      subject: elm.subject,
+      description: elm.description,
+    });
+    setStatusShow(statustype);
+
+    showModal();
   };
 
   const inputChange = (name, id) => (e) => {
